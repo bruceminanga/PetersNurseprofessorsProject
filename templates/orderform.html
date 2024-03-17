@@ -1,0 +1,137 @@
+{% extends 'base.html' %} {% load static %} {% load crispy_forms_tags %}
+{% block content %}
+
+<style>
+    @media (min-width: 576px) { 
+      .fixed-card {
+        position: fixed;
+        /* top: 0; */
+        /* right: 0; */
+      }
+    }
+</style>
+
+
+<br />
+<br />
+<br />
+<br />
+    {% include 'messages.html' %}
+    <div class="container py-5"> 
+
+    <div class="row">
+        <div class="col-sm-6">
+          <div class="card shadow-lg p-3 mb-5 bg-white rounded col-sm-12 ">
+            <div class="card-body">
+                <h5 style="color:blue;">Personal Details</h5>
+                <hr style="border-top: 2px solid black;">
+              <p class="card-text">
+
+                <form method="post" id="myform" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form.academic_level|as_crispy_field }}
+            {{ form.type_of_service|as_crispy_field }}
+            {{ form.type_of_paper|as_crispy_field }}
+            {{ form.subject_area|as_crispy_field }}
+            {{ form.title|as_crispy_field }}
+            {{ form.paper_instructions|as_crispy_field }}
+            {{ form.additional_material|as_crispy_field }}
+            {{ form.paper_format|as_crispy_field }}
+            <br>
+            
+            
+            <div class="text-start">
+                <h5 style="color:blue;">Pricing Details</h5>
+            </div>
+            <hr style="border-top: 2px solid black;">
+            <!-- {{ form.number_of_pages|as_crispy_field }} -->
+            {{form.number_of_pages_increment| as_crispy_field}}
+            {{form.number_of_pages}} <br>
+            {{ form.currency|as_crispy_field }}
+            {{ form.sources|as_crispy_field }}
+            {{ form.powerpoint_slides|as_crispy_field }}
+            {{ form.deadline|as_crispy_field }}
+            {{ form.writer_category|as_crispy_field }}
+            {{ form.preferred_writers_id|as_crispy_field }}
+            
+                    <button type="submit" class="btn btn-primary btn-block">Place Order</button>
+                </form>
+              </p>
+              
+            </div>
+          </div>
+        </div> 
+        <div class="col-sm-6">
+          <div class="card shadow-lg p-3 mb-5 bg-white rounded col-lg-4 col-md-5 col-sm-5 col-12 fixed-card" >
+            <div class="card-body">
+                <h5 class="card-title text-center">Your Order Selections</h5>
+                <hr>
+                <p id="selectedOptions"></p>
+                <hr>
+                <p id="totalPrice"></p>
+                <hr>
+
+                <p>Apply a coupon:</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+{% block footer %}
+{% endblock footer %}
+
+<script>
+
+window.onload = function() {
+    document.getElementById('myform').addEventListener('change', function() {
+        var academicLevel = document.getElementsByName('academic_level')[0].value;
+        var typeOfService = document.getElementsByName('type_of_service')[0].value;
+        var subjectArea = document.getElementsByName('subject_area')[0].value;
+
+        // var typeOfPaper = document.getElementsByName('type_of_paper')[0].value;
+        // var numberOfPages = parseInt(document.getElementsByName('number_of_pages')[0].value) || 0;
+        var writerCategory = document.getElementsByName('writer_category')[0].value;
+        var deadline = document.getElementsByName('deadline')[0].value;
+        var numberOfPageswords = document.getElementsByName('number_of_pages')[0].value;
+        var numberOfPages = document.getElementsByName('number_of_pages_increment')[0].value;
+        var powerpoint_slides = document.getElementsByName('powerpoint_slides')[0].value;        
+        var currency = document.getElementsByName('currency')[0].value;
+
+          // If the number of pages is zero, set it to a lower value
+          if (powerpoint_slides == 0) {
+            powerpoint_slides = 0.5;
+        }
+
+        document.getElementById('selectedOptions').innerText = '..' + academicLevel + '\n..' + typeOfService + ' \n..' + writerCategory + ' \n..' + deadline +' \n..' + powerpoint_slides + ' \n' + numberOfPages + 'pages * ' + numberOfPageswords;
+
+        // Calculate the total price based on the selected options
+        var totalPrice = calculatePrice(academicLevel, typeOfService , currency, subjectArea, deadline, writerCategory, numberOfPages,powerpoint_slides, numberOfPageswords);
+        document.getElementById('totalPrice').innerText = 'Total price:' + currency + ' ' + totalPrice;
+    });
+}
+
+function calculatePrice(academicLevel, typeOfService, currency, subjectArea, deadline, writerCategory, numberOfPages, powerpoint_slides, numberOfPageswords) {
+    var basePrices = {'Highschool': 10, 'Undergraduate': 11, 'Masters': 12, 'Doctoral': 13, 'TEAS 7': 204, 'HESI': 15};
+    var serviceMultipliers = {'Writing from scratch': 1, 'Editing': 0.8, 'Problem solving': 0.6, 'Paraphrasing/Rewriting': 0.7, 'TEAS 7': 1.2, 'HESI': 1.3};
+    var subjectAreaMultipliers = {'Any': 1, 'Archaeology': 2.1, 'Architecture': 2.2, 'Arts': 2.3, 'Astronomy': 2.4, 'Biology': 2.5, 'Business': 2.6, 'Chemistry': 2.7, 'Childcare': 2.8, 'Computers': 2.9, 'Counseling': 3, 'Criminology': 3.1, 'Economics': 3.2, 'Education': 3.3, 'Engineering': 3.4, 'Environmental-Studies': 3.5, 'Ethics': 3.6, 'Ethnic-Studies': 3.7, 'Finance': 3.8, 'Food-Nutrition': 3.9, 'Geography': 4, 'Healthcare': 4.1, 'HESI Test': 4.2, 'History': 4.3, 'Law': 4.4, 'Linguistics': 4.5, 'Literature': 4.6, 'Management': 4.7, 'Mathematics': 4.8, 'Medicine': 4.9, 'Music': 5, 'NACE': 5.1, 'NCLEX-RN': 5.2, 'Nursing': 5.3, 'Philosophy': 5.4, 'Physical-Education': 5.5, 'Physics': 5.6, 'Political-Science': 5.7, 'Programming': 5.8, 'Psychology': 5.9, 'Religion': 6, 'Sociology': 6.1, 'Statistics': 6.2, 'TEAS 7 Test': 6.3};    
+    // var numberOfPages = { }
+    var deadlineMultipliers = {'6hrs': 2.8, '12hrs': 2.6, '24hrs': 2.4, '48hrs': 2.2, '5days': 2, '10days': 1.8, '14days': 1.6, '30days': 1.4};
+    var numberOfPageswordsMultipliers = {'Double Spaced': 2, 'Single Spaced': 1.3 };
+    var writerCategoryMultipliers = {'Standard': 2, 'Premium': 2.5, 'Platinum': 3};
+    var currencyRates = {'USD': 1, 'EUR': 0.85, 'GBP': 0.75, 'KES': 110.15};
+
+    
+    var basePrice = basePrices[academicLevel];
+    var serviceMultiplier = serviceMultipliers[typeOfService ];
+    var currencyRate = currencyRates[currency];
+    var subjectAreaMultipliers = subjectAreaMultipliers[subjectArea];
+    var deadlineMultiplier = deadlineMultipliers[deadline];
+    var numberOfPageswordsMultipliers = numberOfPageswordsMultipliers[numberOfPageswords];
+    var writerCategoryMultipliers = writerCategoryMultipliers[writerCategory]
+    var price = basePrice * serviceMultiplier * currencyRate*subjectAreaMultipliers*deadlineMultiplier*numberOfPageswordsMultipliers*writerCategoryMultipliers * numberOfPages * powerpoint_slides;
+    return price.toFixed(2); ;
+}
+
+</script>
+{% endblock %}

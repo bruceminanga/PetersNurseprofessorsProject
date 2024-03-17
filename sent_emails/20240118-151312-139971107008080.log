@@ -1,0 +1,24 @@
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [example.com] Password Reset Email
+From: webmaster@localhost
+To: bruceminanga@gmail.com
+Date: Thu, 18 Jan 2024 15:13:12 -0000
+Message-ID: <170559079221.187612.874911059357322024@fedora>
+
+Hello from example.com!
+
+You are receiving this email because you or someone else has requested a
+password for your user account. However, we do not have any record of a user
+with email bruceminanga@gmail.com in our database.
+
+This mail can be safely ignored if you did not request a password reset.
+
+If it was you, you can sign up for an account using the link below.
+
+http://127.0.0.1:8000/accounts/signup/
+
+Thank you for using example.com!
+example.com
+-------------------------------------------------------------------------------
