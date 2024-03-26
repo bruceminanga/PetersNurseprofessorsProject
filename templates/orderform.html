@@ -70,8 +70,12 @@
                 <hr>
                 <p id="totalPrice"></p>
                 <hr>
-
-                <p>Apply a coupon:</p>
+                <form method="post">
+                  {% csrf_token %}
+                  {{ form2.as_p }}             
+                  <button type="submit">Apply</button>
+              </form>
+                
             </div>
           </div>
         </div>
@@ -89,7 +93,7 @@ window.onload = function() {
         var typeOfService = document.getElementsByName('type_of_service')[0].value;
         var subjectArea = document.getElementsByName('subject_area')[0].value;
 
-        // var typeOfPaper = document.getElementsByName('type_of_paper')[0].value;
+        var typeOfPaper = document.getElementsByName('type_of_paper')[0].value;
         // var numberOfPages = parseInt(document.getElementsByName('number_of_pages')[0].value) || 0;
         var writerCategory = document.getElementsByName('writer_category')[0].value;
         var deadline = document.getElementsByName('deadline')[0].value;
@@ -103,7 +107,7 @@ window.onload = function() {
             powerpoint_slides = 0.5;
         }
 
-        document.getElementById('selectedOptions').innerText = '..' + academicLevel + '\n..' + typeOfService + ' \n..' + writerCategory + ' \n..' + deadline +' \n..' + powerpoint_slides + ' \n' + numberOfPages + 'pages * ' + numberOfPageswords;
+        document.getElementById('selectedOptions').innerText = academicLevel + '\n ' + typeOfService + ' * ' + typeOfPaper +'\n '+subjectArea+ ' * ' + numberOfPages + 'pages * ' + numberOfPageswords +' \n ' + powerpoint_slides + 'PPT * '+ writerCategory + ' * ' + deadline;
 
         // Calculate the total price based on the selected options
         var totalPrice = calculatePrice(academicLevel, typeOfService , currency, subjectArea, deadline, writerCategory, numberOfPages,powerpoint_slides, numberOfPageswords);
@@ -112,7 +116,7 @@ window.onload = function() {
 }
 
 function calculatePrice(academicLevel, typeOfService, currency, subjectArea, deadline, writerCategory, numberOfPages, powerpoint_slides, numberOfPageswords) {
-    var basePrices = {'Highschool': 10, 'Undergraduate': 11, 'Masters': 12, 'Doctoral': 13, 'TEAS 7': 204, 'HESI': 15};
+    var basePrices = {'High School': 10, 'Undergraduate': 11, 'Masters': 12, 'Doctoral': 13, 'TEAS 7': 204, 'HESI': 15};
     var serviceMultipliers = {'Writing from scratch': 1, 'Editing': 0.8, 'Problem solving': 0.6, 'Paraphrasing/Rewriting': 0.7, 'TEAS 7': 1.2, 'HESI': 1.3};
     var subjectAreaMultipliers = {'Any': 1, 'Archaeology': 2.1, 'Architecture': 2.2, 'Arts': 2.3, 'Astronomy': 2.4, 'Biology': 2.5, 'Business': 2.6, 'Chemistry': 2.7, 'Childcare': 2.8, 'Computers': 2.9, 'Counseling': 3, 'Criminology': 3.1, 'Economics': 3.2, 'Education': 3.3, 'Engineering': 3.4, 'Environmental-Studies': 3.5, 'Ethics': 3.6, 'Ethnic-Studies': 3.7, 'Finance': 3.8, 'Food-Nutrition': 3.9, 'Geography': 4, 'Healthcare': 4.1, 'HESI Test': 4.2, 'History': 4.3, 'Law': 4.4, 'Linguistics': 4.5, 'Literature': 4.6, 'Management': 4.7, 'Mathematics': 4.8, 'Medicine': 4.9, 'Music': 5, 'NACE': 5.1, 'NCLEX-RN': 5.2, 'Nursing': 5.3, 'Philosophy': 5.4, 'Physical-Education': 5.5, 'Physics': 5.6, 'Political-Science': 5.7, 'Programming': 5.8, 'Psychology': 5.9, 'Religion': 6, 'Sociology': 6.1, 'Statistics': 6.2, 'TEAS 7 Test': 6.3};    
     // var numberOfPages = { }

@@ -41,12 +41,14 @@ def home(request):
 @login_required
 def orderform(request):
     form = NewCustomerForm(request.POST, request.FILES)
+    form2 = CouponApplyForm(request.POST or None)
     if request.method == 'POST':
         print('success form is post')
-        if form.is_valid():
+        if form.is_valid() and form2.is_valid():
            
             # Now save the order to the database
             form.save()
+            form2.save()
 
 
             
@@ -55,12 +57,21 @@ def orderform(request):
         else:
             messages.error(request, 'Invalid form submission.')
             print(form.errors.as_data())
-            form = NewCustomerForm()    
+            print(form2.errors.as_data())
+            form = NewCustomerForm()
+            form2 = CouponApplyForm()
+ 
     else:
         form = NewCustomerForm()
+        form2 = CouponApplyForm()
         print('failed form is get')
     
-    return render(request, "orderform.html", {'form': form})
+    context = {
+        'form': form,
+        'form2': form2,
+    }
+    
+    return render(request, "orderform.html", context=context)
 
 def process_payment(request):
     request.session['order_id'] = '1'

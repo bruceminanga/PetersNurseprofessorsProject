@@ -9,7 +9,7 @@ class CouponApplyForm(forms.Form):
 
 class NewCustomerForm(forms.ModelForm):
     ACADEMIC_LEVEL_CHOICES = [
-    ("Highschool", "Highschool"),
+    ("High School", "High School"),
     ("Undergraduate", "Undergraduate"),
     ("Masters", "Masters"),
     ("Doctoral", "Doctoral"),
