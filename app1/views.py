@@ -167,4 +167,8 @@ def checkout(request):
         # If the request method is not POST, create a blank form
         form = CheckoutForm()
         # Render the HTML template checkout.html with the form data
+<<<<<<< HEAD
         return render(request, 'ecommerce_app/checkout.html', locals())
+=======
+        return render(request, 'ecommerce_app/checkout.html', locals())
+>>>>>>> bde3b02 (final commit)
