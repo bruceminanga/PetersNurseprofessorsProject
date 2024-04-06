@@ -13,6 +13,7 @@ crispy-bootstrap5 = "*"
 django-paypal = "*"
 pillow = "*"
 django-widget-tweaks = "*"
+python-dotenv = "*"
 
 [dev-packages]
 
