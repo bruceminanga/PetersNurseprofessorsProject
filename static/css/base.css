@@ -61,3 +61,24 @@ section.pricing {
         opacity: 1;
     }
 }
+
+:target:before {
+    content: "";
+    display: block;
+    height: 80px;
+    /* Give height as per your need */
+    margin: -80px 0 0;
+    /* Give negative margin as per your need */
+}
+
+section::before {
+    content: "";
+    display: block;
+    height: 60px;
+    /* Adjust this value based on your navbar height */
+    margin-top: -60px;
+    /* Should be the negative value of height */
+    visibility: hidden;
+    pointer-events: none;
+}
+

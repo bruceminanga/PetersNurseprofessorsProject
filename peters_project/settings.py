@@ -48,12 +48,8 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'crispy_forms',
     'crispy_bootstrap5',
-    'django_extensions',
-   
-    
-    
-    # all auth configurations
-    
+    'django_extensions',   
+    # all auth configurations   
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
@@ -176,9 +172,21 @@ LOGOUT_REDIRECT_URL = "/"
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
 
-EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
-EMAIL_FILE_PATH = BASE_DIR / "sent_emails"
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
+# Email Settings
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+# EMAIL_HOST_USER = 'bruceminanga@gmail.com'
+# EMAIL_HOST_PASSWORD = '34736215Bm'
+# DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+# ACCOUNT_EMAIL_REQUIRED = True
+# ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+# End of email settings
+
+EMAIL_FILE_PATH = BASE_DIR / "sent_emails"
 MEDIA_ROOT = BASE_DIR / "media"
 MEDIA_URL = '/media/'
 

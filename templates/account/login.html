@@ -13,6 +13,7 @@
                 {{ form | crispy}}
                 <button type="submit">Log In</button>
             </form>
+            <p><a href="{{ password_reset }}"></a></p>
 
 
             <p>
@@ -25,4 +26,6 @@
 </div>
 
 <br> <br> <br>
+{% block footer %}
+{% endblock footer %}
 {% endblock content %}

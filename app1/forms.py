@@ -3,7 +3,7 @@ from django import forms
 from app1.models import Customer
 
 class CouponApplyForm(forms.Form):
-    code = forms.CharField()
+    coupon_code = forms.CharField()
 
     
 
