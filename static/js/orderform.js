@@ -47,7 +47,7 @@ var academicLevel, typeOfService, currency = 'USD', subjectArea, deadline, write
       // Create a new script tag for the PayPal SDK
       var script = document.createElement('script');
       script.id = 'paypal-js';
-      script.src = 'https://www.paypal.com/sdk/js?client-id=AW7XnTz50r52rNBP5ZTnYQSv3_MLcYtP1n1UGmaAPXdKmioFSlTlfJIAo44COSLpVsvP2z-BCr93-8eV&currency=' + currency;
+      script.src = 'https://www.paypal.com/sdk/js?client-id=AR8UiQdUlh_S3WrWA3JEBM6PRJ5JHYLP_GNUtNVFX-Af6jdnzOtUd8bCEXEntohHdq81rFKf7yUKD5MR&currency=' + currency;
       // When the script loads, initialize the PayPal buttons
       script.onload = function () {
         paypal.Buttons({

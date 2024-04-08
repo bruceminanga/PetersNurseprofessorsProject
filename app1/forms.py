@@ -2,6 +2,14 @@
 from django import forms
 from app1.models import Customer
 
+class NewsletterForm(forms.Form):
+    email = forms.EmailField(widget=forms.EmailInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Enter email',
+        'aria-label': "Recipient's username",
+        'aria-describedby': 'button-addon2'
+    }))
+
 class CouponApplyForm(forms.Form):
     coupon_code = forms.CharField()
 

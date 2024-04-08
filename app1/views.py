@@ -13,7 +13,30 @@ from django.utils import timezone
 from django.views.decorators.http import require_POST
 from django.views import View
 from django.http import JsonResponse
+from .forms import NewsletterForm
 
+def newsletter(request):
+    if request.method == 'POST':
+        form3 = NewsletterForm(request.POST)
+        if form3.is_valid():
+            email = form3.cleaned_data['email']
+            # Add email to your newsletter subscription list
+            messages.success(request, 'you will recieve email.')
+        else:
+            # If the forms are not valid, display an error message
+            messages.error(request, 'Invalid form submission.')
+            # Print the form errors
+            print(form.errors.as_data())
+            
+            # Create new blank forms
+            form3 = NewsletterForm()
+            
+        # Handle the coupon form
+        form2 = CouponApplyForm(request.POST) 
+    else:
+        form3 = NewsletterForm()
+
+    return render(request, 'base.html', {'form3': form3})
 
 # This function is called when PayPal sends a POST request after a payment is completed
 @csrf_exempt

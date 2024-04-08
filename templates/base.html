@@ -142,11 +142,19 @@
             promotions, job vacancies and discounts of our store.</span>
           <div class="mx-5">
             <div class="input-group mb-3 mt-4">
-              <input type="text" class="form-control" placeholder="Enter email" aria-label="Recipient's username"
-                aria-describedby="button-addon2" />
-              <button class="btn btn-success border-rad" type="button" id="button-addon2">
-                Subscribe
-              </button>
+             
+              
+              <form action="{% url 'app1:home' %}" method="post">
+                {% csrf_token %}
+                <div class="input-group mb-3">
+                    {{ form3.email }}
+                    <div class="input-group-append">
+                        <button class="btn btn-success border-rad" type="submit" id="button-addon2">Subscribe</button>
+                    </div>
+                </div>
+            </form>
+            
+              
             </div>
           </div>
         </div>
