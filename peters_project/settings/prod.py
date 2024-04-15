@@ -35,9 +35,9 @@ ALLOWED_HOSTS = ['nurseprofessors.com', 'www.nurseprofessors.com']
 DATABASES = {
   'default': {
       'ENGINE': 'django.db.backends.postgresql_psycopg2',
-      'NAME': os.environ.get('POSTGRES_DB'),
-      'USER': os.environ.get('POSTGRES_USER'),
-      'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
+      'NAME': os.getenv('POSTGRES_DB'),
+      'USER': os.getenv('POSTGRES_USER'),
+      'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
       'HOST': '127.0.0.1',
       'PORT': '5432',
   }
