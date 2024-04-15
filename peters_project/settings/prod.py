@@ -1,7 +1,3 @@
-import os
-from .base import *
-import pprint
-pprint.pprint(dir())
 
 # static files
 INSTALLED_APPS += [    
@@ -16,7 +12,7 @@ MIDDLEWARE += [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    #'allauth.account.middleware.AccountMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 STORAGES = {

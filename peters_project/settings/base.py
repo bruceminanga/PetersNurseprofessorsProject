@@ -8,7 +8,7 @@ load_dotenv()
 # Access environment variables
 SECRET_KEY = os.getenv('SECRET_KEY')
 DEBUG = os.getenv('DEBUG')
-DATABASE_URL = os.getenv('DATABASE_URL')
+# DATABASE_URL = os.getenv('DATABASE_URL')
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
