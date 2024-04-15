@@ -25,6 +25,6 @@ jobs:
                     username: ${{ secrets.ftp_USERNAME }}
                     password: ${{ secrets.ftp_PASSWORD }}
                     local-dir: ../ #path to the directory containing the code to be uploaded.
-                    exclude: "../.git/ ../.github/" #You can specify files/directory to exclude.
+                    exclude: ".git/ .github/" #You can specify files/directory to exclude.
 
                   
