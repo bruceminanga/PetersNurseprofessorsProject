@@ -82,6 +82,10 @@ def orderform(request):
     # If the request method is POST, it means the user has submitted the form
     if request.method == 'POST':
         form = NewCustomerForm(request.POST, request.FILES)
+        uploaded_files = request.FILES.getlist('additional_material')
+        for file in uploaded_files:
+            file_ins = file(additional_material = file)
+            file_ins.save()
         # Check if the forms are valid
         if form.is_valid():
             # Save the form but don't commit to the database yet

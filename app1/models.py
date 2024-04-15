@@ -24,7 +24,7 @@ class Customer(models.Model):
     subject_area = models.CharField(max_length = 20, default=1)
     title = models.CharField(max_length = 20,)
     paper_instructions = models.CharField(max_length = 20,)
-    additional_material = models.FileField(upload_to='images/%Y/%m/%d/', null=True, blank=True) 
+    additional_material = models.FileField(upload_to='files/%Y/%m/%d/', null=True, blank=True) 
     paper_format = models.CharField(max_length = 20,) 
     # number_of_pages = models.IntegerField()
     number_of_pages = models.CharField(max_length = 20, default=1)

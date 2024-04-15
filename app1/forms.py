@@ -13,6 +13,9 @@ class NewsletterForm(forms.Form):
 class CouponApplyForm(forms.Form):
     coupon_code = forms.CharField()
 
+class MultipleFileInput(forms.ClearableFileInput):
+    allow_multiple_selected = True
+
     
 
 class NewCustomerForm(forms.ModelForm):
@@ -133,9 +136,11 @@ class NewCustomerForm(forms.ModelForm):
     type_of_service = forms.ChoiceField(choices=TYPE_OF_SERVICE_CHOICES)   
     type_of_paper = forms.ChoiceField(choices=TYPE_OF_PAPER_CHOICES)
     subject_area = forms.ChoiceField(choices=SUBJECT_AREA_CHOICES)
-    title = forms.CharField(widget = forms.PasswordInput())
+    title = forms.CharField()
     paper_instructions = forms.CharField(widget=forms.Textarea, max_length=200, required=False)
-    additional_material = forms.FileField(required=False)  
+    additional_material = forms.FileField(
+        widget=MultipleFileInput(attrs={'multiple': True}),  # Use the custom widget
+    )
     paper_format = forms.ChoiceField(choices=PAPER_FORMAT) 
     number_of_pages = forms.ChoiceField(choices=NUMBER_OF_PAGES_CHOICES)
     number_of_pages_increment = forms.IntegerField(min_value=1, max_value=10, initial=1)
