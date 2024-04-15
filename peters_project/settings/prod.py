@@ -1,7 +1,7 @@
 from .base import *
 
 # static files
-INSTALLED_APPS += [    
+INSTALLED_APPS += [
     "whitenoise.runserver_nostatic",   
 ]
 
@@ -28,9 +28,9 @@ STORAGES = {
 
 DEBUG = True
 
-ADMINS = [
-    ('Bruce Minanga', 'bruceminanga@gmail.com'),
-]
+# ADMINS = [
+#     ('Bruce Minanga', 'bruceminanga@gmail.com'),
+# ]
 
 ALLOWED_HOSTS = ['nurseprofessors.com', 'www.nurseprofessors.com']
 
