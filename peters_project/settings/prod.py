@@ -1,3 +1,4 @@
+from .base import *
 
 # static files
 INSTALLED_APPS += [    
