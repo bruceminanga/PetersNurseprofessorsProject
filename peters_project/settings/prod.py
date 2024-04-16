@@ -6,6 +6,10 @@ INSTALLED_APPS += [
     "whitenoise.runserver_nostatic",   
 ]
 
+MIDDLEWARE += [
+    "whitenoise.middleware.WhiteNoiseMiddleware",
+]
+
 STORAGES = {
     "default": {
         "BACKEND": "django.core.files.storage.FileSystemStorage",
