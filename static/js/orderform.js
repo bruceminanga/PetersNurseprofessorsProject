@@ -81,15 +81,17 @@ var academicLevel, typeOfService, currency = 'USD', subjectArea, deadline, write
   }
 
   // This function calculates the price based on various parameters
-  function calculatePrice(academicLevel, typeOfService, currency, subjectArea, deadline, writerCategory, numberOfPages, powerpoint_slides, numberOfPageswords) {
-    // It defines various pricing parameters
-    var basePrices = { 'High School': 10, 'Undergraduate': 11, 'Masters': 12, 'Doctoral': 13, 'TEAS 7': 204, 'HESI': 15 };
-    var serviceMultipliers = { 'Writing from scratch': 1, 'Editing': 0.8, 'Problem solving': 0.6, 'Paraphrasing/Rewriting': 0.7, 'TEAS 7': 1.2, 'HESI': 1.3 };
-    var subjectAreaMultipliers = { 'Any': 1, 'Archaeology': 2.1, 'Architecture': 2.2, 'Arts': 2.3, 'Astronomy': 2.4, 'Biology': 2.5, 'Business': 2.6, 'Chemistry': 2.7, 'Childcare': 2.8, 'Computers': 2.9, 'Counseling': 3, 'Criminology': 3.1, 'Economics': 3.2, 'Education': 3.3, 'Engineering': 3.4, 'Environmental-Studies': 3.5, 'Ethics': 3.6, 'Ethnic-Studies': 3.7, 'Finance': 3.8, 'Food-Nutrition': 3.9, 'Geography': 4, 'Healthcare': 4.1, 'HESI Test': 4.2, 'History': 4.3, 'Law': 4.4, 'Linguistics': 4.5, 'Literature': 4.6, 'Management': 4.7, 'Mathematics': 4.8, 'Medicine': 4.9, 'Music': 5, 'NACE': 5.1, 'NCLEX-RN': 5.2, 'Nursing': 5.3, 'Philosophy': 5.4, 'Physical-Education': 5.5, 'Physics': 5.6, 'Political-Science': 5.7, 'Programming': 5.8, 'Psychology': 5.9, 'Religion': 6, 'Sociology': 6.1, 'Statistics': 6.2, 'TEAS 7 Test': 6.3 };
-    var deadlineMultipliers = { '6hrs': 2.8, '12hrs': 2.6, '24hrs': 2.4, '48hrs': 2.2, '5days': 2, '10days': 1.8, '14days': 1.6, '30days': 1.4 };
-    var numberOfPageswordsMultipliers = { 'Double Spaced': 2, 'Single Spaced': 1.3 };
-    var writerCategoryMultipliers = { 'Standard': 2, 'Premium': 2.5, 'Platinum': 3 };
-    var currencyRates = { 'USD': 1, 'EUR': 0.85, 'GBP': 0.75, 'KES': 110.15 };
+  function calculatePrice(academicLevel, typeOfService, currency, subjectArea, deadline, writerCategory, numberOfPages, powerpoint_slides, numberOfPageswords) {// Revised pricing parameters for a new academic writing service
+    var basePrices = { 'High School': 40, 'Undergraduate': 45, 'Masters': 50, 'Doctoral': 55, 'TEAS 7': 40, 'HESI': 40 };
+    var serviceMultipliers = { 'Writing from scratch': 1, 'Editing': 0.75, 'Problem solving': 0.65, 'Paraphrasing/Rewriting': 0.55, 'TEAS 7': 1, 'HESI': 1 };
+    var subjectAreaMultipliers = { 'Any': 0.7, 'Archaeology': 0.7, 'Architecture': 1.3, 'Arts': 0.7, 'Astronomy': 0.7, 'Biology': 0.7, 'Business': 0.7, 'Chemistry': 0.8, 'Childcare': 0.7, 'Computers': 0.7, 'Counseling': 0.7, 'Criminology': 0.7, 'Economics': 0.7, 'Education': 0.7, 'Engineering': 0.82, 'Environmental-Studies': 0.7, 'Ethics': 1.8, 'Ethnic-Studies': 0.7, 'Finance': 0.7, 'Food-Nutrition': 0.7, 'Geography': 0.7, 'Healthcare': 0.7, 'History': 0.7, 'Law': 0.7, 'Linguistics': 0.7, 'Literature': 0.7, 'Management': 0.7, 'Mathematics': 0.9, 'Medicine': 0.7, 'Music': 0.7, 'Nursing': 0.7, 'Philosophy': 0.7, 'Physical-Education': 0.7, 'Physics': 0.83, 'Political-Science': 0.7, 'Programming': 0.82, 'Psychology': 0.7, 'Religion': 0.7, 'Sociology': 0.7, 'Statistics': 0.8, 'TEAS 7 Test': 0.7};
+    var deadlineMultipliers = { '6hrs': 2.5, '12hrs': 2.3, '24hrs': 2.1, '48hrs': 1.9, '5days': 1.7, '10days': 1.5, '14days': 1.3, '30days': 1.1 };
+    var numberOfPageswordsMultipliers = { 'Double Spaced': 1, 'Single Spaced': 1.9 };
+    var writerCategoryMultipliers = { 'Standard': 1, 'Premium': 1.2, 'Platinum': 1.4 };
+    var currencyRates = { 'USD': 1, 'EUR': 0.88, 'GBP': 0.78, 'KES': 113 };
+    
+
+
 
     // It calculates the price based on the pricing parameters and the selected options
     var basePrice = basePrices[academicLevel];
