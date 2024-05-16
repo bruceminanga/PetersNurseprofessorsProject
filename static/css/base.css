@@ -61,6 +61,7 @@ section.pricing {
         opacity: 1;
     }
 }
+  
 
 :target:before {
     content: "";
