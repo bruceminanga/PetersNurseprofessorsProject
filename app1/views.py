@@ -4,7 +4,7 @@ from app1.forms import NewCustomerForm, CouponApplyForm
 from django.contrib.auth.decorators import login_required
 from paypal.standard.forms import PayPalPaymentsForm
 from django.conf import settings
-from .models import Order, Coupon
+from .models import Order, Message, Coupon, Referral,  Wallet, Transaction, Discount, Referral, Message
 from django.shortcuts import render, HttpResponse, redirect, get_object_or_404, reverse
 from django.views.decorators.csrf import csrf_exempt
 from decimal import Decimal
@@ -14,6 +14,90 @@ from django.views.decorators.http import require_POST
 from django.views import View
 from django.http import JsonResponse
 from .forms import NewsletterForm
+from django.db.models import Sum
+from django.core.exceptions import ObjectDoesNotExist
+from django.db import models
+
+@login_required
+def bidding_orders(request):
+    bidding_orders = Order.objects.filter(bidding=True)
+    return render(request, 'dashboard/bidding_orders.html', {'bidding_orders': bidding_orders})
+
+@login_required
+def in_progress_orders(request):
+    in_progress_orders = Order.objects.filter(status='in_progress')
+    return render(request, 'dashboard/in_progress_orders.html', {'in_progress_orders': in_progress_orders})
+
+
+@login_required
+def editing_orders(request):
+    editing_orders = Order.objects.filter(status='editing')
+    return render(request, 'dashboard/editing_orders.html', {'editing_orders': editing_orders})
+
+
+@login_required
+def completed_orders(request):
+    completed_orders = Order.objects.filter(status='completed')
+    return render(request, 'dashboard/completed_orders.html', {'completed_orders': completed_orders})
+
+
+@login_required
+def revision_orders(request):
+    revision_orders = Order.objects.filter(status='revision')
+    return render(request, 'dashboard/revision_orders.html', {'revision_orders': revision_orders})
+
+
+@login_required
+def approved_orders(request):
+    approved_orders = Order.objects.filter(status='approved')
+    return render(request, 'dashboard/approved_orders.html', {'approved_orders': approved_orders})
+
+
+@login_required
+def cancelled_orders(request):
+    cancelled_orders = Order.objects.filter(status='cancelled')
+    return render(request, 'dashboard/cancelled_orders.html', {'cancelled_orders': cancelled_orders})
+
+def messages_view(request):
+    messages = Message.objects.filter(user=request.user)
+    unread_messages = messages.filter(is_read=False)
+    unread_messages_count = unread_messages.count()
+
+    context = {
+        'messages': messages,
+        'unread_messages_count': unread_messages_count,
+    }
+    return render(request, 'dashboard/messages.html', context)
+
+def referral_earnings_view(request):
+    referrals = Referral.objects.filter(referrer=request.user).order_by('-date')  # Adjust the model fields as necessary
+    total_earnings = referrals.aggregate(total=models.Sum('amount_earned'))['total'] or 0
+    context = {
+        'total_earnings': total_earnings,
+        'referrals': referrals,
+    }
+    return render(request, 'dashboard/referral_earnings.html', context)
+
+def my_discounts_view(request):
+    discounts = Discount.objects.filter(user=request.user).order_by('-expiry_date')  # Adjust the model fields as necessary
+    context = {
+        'discounts': discounts,
+    }
+    return render(request, 'dashboard/my_discounts.html', context)
+
+def wallet_management_view(request):
+    try:
+        wallet = Wallet.objects.get(user=request.user)
+    except ObjectDoesNotExist:
+        # Handle the case where the wallet does not exist
+        wallet = Wallet.objects.create(user=request.user, balance=0.00)
+    transactions = Transaction.objects.filter(user=request.user).order_by('-date')  # Adjust the model fields as necessary
+    context = {
+        'wallet_balance': wallet.balance,
+        'transactions': transactions,
+    }
+    return render(request, 'dashboard/wallet_management.html', context)
+
 
 def newsletter(request):
     if request.method == 'POST':
@@ -72,72 +156,103 @@ def home(request):
     # Render the HTML template index.html
     return render(request, "index.html")
 
+@login_required
+def dashboard(request):
+    user = request.user
+    registration_date = user.date_joined
+    completed_orders = Order.objects.filter(status='completed')
+    in_progress_orders = Order.objects.filter(status='in_progress')
+    unpaid_orders_count = Order.objects.filter(paid=False).count()
+    bidding_orders_count = Order.objects.filter(bidding=True).count()
+    in_progress_orders_count = Order.objects.filter(status='in_progress').count() 
+    editing_orders_count = Order.objects.filter(status='editing').count()
+    completed_orders_count = Order.objects.filter(status='completed').count()
+    revision_orders_count = Order.objects.filter(status='revision').count()
+    approved_orders_count = Order.objects.filter(status='approved').count()
+    cancelled_orders_count = Order.objects.filter(status='cancelled').count()
+    unread_messages_count = Message.objects.filter(read=False).count()
+    active_discounts_count = Coupon.objects.filter(active=True).count()
+    total_referral_earnings = Referral.objects.aggregate(total=Sum('amount_earned'))['total'] or 0.00
+    wallet_balance = 0.00
+    if user.is_authenticated:
+        try:
+            wallet_balance = Wallet.objects.get(user=user).balance
+        except Wallet.DoesNotExist:
+            # Handle the case where the wallet does not exist
+            wallet_balance = 0.00
+    pending_payments = Order.objects.filter(status='pending')
+    context = {
+        'completed_orders': completed_orders,
+        'in_progress_orders': in_progress_orders,
+        'pending_payments': pending_payments,
+        'unpaid_orders_count': unpaid_orders_count,
+        'bidding_orders_count': bidding_orders_count,
+        'in_progress_orders_count': in_progress_orders_count,
+        'editing_orders_count': editing_orders_count,
+        'completed_orders_count': completed_orders_count,
+        'revision_orders_count': revision_orders_count,
+        'approved_orders_count': approved_orders_count,
+        'cancelled_orders_count': cancelled_orders_count,
+        'unread_messages_count': unread_messages_count,
+        'active_discounts_count': active_discounts_count,
+        'total_referral_earnings': total_referral_earnings,
+        'wallet_balance': wallet_balance,
+        'registration_date': registration_date,
+    }
+    return render(request, "dashboard/dashboard.html", context)
+
 # This function handles the order form page of the website
 # The login_required decorator ensures that only logged-in users can access this page
 @login_required
 def orderform(request):
-    # Create form instances
-    
-    coupon_apply_form = CouponApplyForm()  # Define here
-    # If the request method is POST, it means the user has submitted the form
+    coupon_apply_form = CouponApplyForm()
     if request.method == 'POST':
         form = NewCustomerForm(request.POST, request.FILES)
-        uploaded_files = request.FILES.getlist('additional_material')
-        for file in uploaded_files:
-            file_ins = file(additional_material = file)
-            file_ins.save()
-        # Check if the forms are valid
         if form.is_valid():
-            # Save the form but don't commit to the database yet
             order = form.save(commit=False)
-            # Assign the calculated price to the order's price field
-            order.price = price
-            # Now save the order to the database
+            order.user = request.user  # Ensure the order is associated with the current user
+            # Assign the calculated price to the order's price field (define the price calculation logic as needed)
+            order.price = calculate_order_price(form.cleaned_data)  # Example function to calculate price
             order.save()
-            # Display a success message
+
+            # Save the uploaded files
+            uploaded_files = request.FILES.getlist('additional_material')
+            for file in uploaded_files:
+                order.additional_material.save(file.name, file, save=True)
+
             messages.success(request, 'Order request submitted successfully.')
 
-           
-        else:
-            # If the forms are not valid, display an error message
-            messages.error(request, 'Invalid form submission.')
-            # Print the form errors
-            print(form.errors.as_data())
-            
-            # Create new blank forms
-            form = NewCustomerForm()
-            
-        # Handle the coupon form
-        form2 = CouponApplyForm(request.POST) 
-        if form2.is_valid():
-            # If the form is valid, get the coupon code from the form
-            code = form2.cleaned_data['coupon_code']
-            now = timezone.now()
-            try:
-                # Try to get the coupon with the given code that is valid and active
-                coupon = Coupon.objects.get(code__iexact=code,
-                                            valid_from__lte=now,
-                                            valid_to__gte=now,
-                                            active=True)
-                # If the coupon exists, store the coupon id in the session
-                request.session['coupon_id'] = coupon.id
-            except Coupon.DoesNotExist:
-                # If the coupon does not exist, set the coupon id in the session to None
-                request.session['coupon_id'] = None    
-    else:
-        # If the request method is not POST, create blank forms
-        form = NewCustomerForm()
-        
+            # Handle the coupon form
+            form2 = CouponApplyForm(request.POST)
+            if form2.is_valid():
+                code = form2.cleaned_data['coupon_code']
+                now = timezone.now()
+                try:
+                    coupon = Coupon.objects.get(code__iexact=code,
+                                                valid_from__lte=now,
+                                                valid_to__gte=now,
+                                                active=True)
+                    request.session['coupon_id'] = coupon.id
+                except Coupon.DoesNotExist:
+                    request.session['coupon_id'] = None
 
-    # Create a context dictionary to pass to the template
+            return redirect('app1:dashboard')  # Replace with your success page
+
+        else:
+            messages.error(request, 'Invalid form submission.')
+            print(form.errors.as_data())
+    else:
+        form = NewCustomerForm()
+
     context = {
         'form': form,
         'coupon_apply_form': coupon_apply_form
-        
     }
-    
-    # Render the HTML template orderform.html with the data in the context variable
     return render(request, "orderform.html", context=context)
+
+def calculate_order_price(data):
+    # Define your price calculation logic here
+    return 0.0  # Replace with actual calculation
 
 # This function handles the payment process
 def process_payment(request):

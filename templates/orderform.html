@@ -10,10 +10,7 @@
     }
   }
 </style>
-<script src="{% static 'js/orderform.js' %}"></script> <!-- linking javascriipt -->
 
-<script
-  src="https://www.paypal.com/sdk/js?client-id=AR8UiQdUlh_S3WrWA3JEBM6PRJ5JHYLP_GNUtNVFX-Af6jdnzOtUd8bCEXEntohHdq81rFKf7yUKD5MR"></script>
 
 <br /><br /><br /><br />
 {% include 'messages.html' %}
@@ -56,6 +53,7 @@
             {{ form.deadline|as_crispy_field }}
             {{ form.writer_category|as_crispy_field }}
             {{ form.preferred_writers_id|as_crispy_field }}
+            <button type="submit" class="btn btn-primary">Submit Order</button>
             <div id="paypal-button-container">
             </div>
           </div>
@@ -86,4 +84,8 @@
 
 {% block footer %}
 {% endblock footer %}
+<script src="{% static 'js/orderform.js' %}"></script> <!-- linking javascriipt -->
+
+<script
+  src="https://www.paypal.com/sdk/js?client-id=AR8UiQdUlh_S3WrWA3JEBM6PRJ5JHYLP_GNUtNVFX-Af6jdnzOtUd8bCEXEntohHdq81rFKf7yUKD5MR"></script>
 {% endblock %}

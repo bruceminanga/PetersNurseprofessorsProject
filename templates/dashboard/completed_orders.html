@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+<br><br><br><br>
+
+<div class="container mt-4">
+    <h1 class="mb-4">Completed Orders</h1>
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Order ID</th>
+                    <th>Title</th>
+                    <th>Type of Paper</th>
+                    <th>Words</th>
+                    <th>Writer</th>
+                    <th>Date</th>
+                    <th>Amount Due</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in completed_orders %}
+                <tr>
+                    <td>{{ order.id }}</td>
+                    <td>{{ order.title }}</td>
+                    <td>{{ order.type_of_paper }}</td>
+                    <td>{{ order.words }}</td>
+                    <td>{{ order.writer }}</td>
+                    <td>{{ order.date }}</td>
+                    <td>{{ order.amount_due }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<br><br><br><br>
+{% endblock %}
