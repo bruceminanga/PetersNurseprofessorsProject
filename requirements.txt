@@ -1,9 +1,0 @@
-Django==3.2.9
-django-paypal==2.0
-django-widget-tweaks==1.5.0
-django-crispy-forms
-crispy-bootstrap5
-django-extensions==3.2.3
-django-allauth
-python-dotenv
-whitenoise==6.0.0
