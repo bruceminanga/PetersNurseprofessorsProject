@@ -14,7 +14,7 @@ class Discount(models.Model):
 
 class Coupon(models.Model):
     code = models.CharField(max_length=50,
-                            unique=True)
+                            unique=True, blank=True, null=True)
     valid_from = models.DateTimeField()
     valid_to = models.DateTimeField()
     discount = models.IntegerField(
@@ -26,26 +26,56 @@ class Coupon(models.Model):
     def __str__(self):
         return self.code
 
-class Customer(models.Model):  
-    academic_level = models.CharField(max_length = 20, default=1)
-    type_of_service = models.CharField(max_length = 30, default=1)   
-    type_of_paper = models.CharField(max_length = 20, default=1)
-    subject_area = models.CharField(max_length = 20, default=1)
-    title = models.CharField(max_length = 20,)
-    paper_instructions = models.CharField(max_length = 20,)
-    additional_material = models.FileField(upload_to='files/%Y/%m/%d/', null=True, blank=True) 
-    paper_format = models.CharField(max_length = 20,) 
-    # number_of_pages = models.IntegerField()
-    number_of_pages = models.CharField(max_length = 20, default=1)
+from django.db import models
+
+from django.db import models
+
+class Order(models.Model):
+    academic_level = models.CharField(max_length=20, default='1')
+    type_of_service = models.CharField(max_length=30, default='1')
+    type_of_paper = models.CharField(max_length=255, default='Unknown')
+    subject_area = models.CharField(max_length=20, default='1')
+    title = models.CharField(max_length=255, default='Untitled')
+    paper_instructions = models.TextField(default='')
+    additional_material = models.FileField(upload_to='files/%Y/%m/%d/', null=True, blank=True)
+    paper_format = models.CharField(max_length=20, default='Unknown')
+    number_of_pages = models.CharField(max_length=20, default='1')
     number_of_pages_increment = models.IntegerField(default=1)
-    currency = models.CharField(max_length = 20,) 
-    sources = models.IntegerField()
-    powerpoint_slides = models.IntegerField() 
-    deadline = models.CharField(max_length = 20,)
-    writer_category = models.CharField(max_length = 20,)
+    currency = models.CharField(max_length=20, default='USD')
+    sources = models.IntegerField(default=0)
+    powerpoint_slides = models.IntegerField(default=0)
+    deadline = models.CharField(max_length=20, default='None')
+    writer_category = models.CharField(max_length=20, default='Standard')
     preferred_writers_id = models.IntegerField(null=True, blank=True)
-    # additional_services = models.IntegerField()
-    price = models.DecimalField(max_digits=6, decimal_places=2, null=True, blank=True)
+    price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('completed', 'Completed'),
+        ('in_progress', 'In Progress'),
+        ('cancelled', 'Cancelled'),
+        ('approved', 'Approved'),
+        ('revision', 'Revision'),
+        ('editing', 'Editing')
+    ]
+
+    writer = models.CharField(max_length=255, default='Untitled')
+    words = models.IntegerField(default=0)
+    amount_due = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    name = models.CharField(max_length=191)
+    email = models.EmailField()
+    postal_code = models.IntegerField(default=0)
+    address = models.CharField(max_length=191, default='Unknown')
+    date = models.DateTimeField(auto_now_add=True)
+    paid = models.BooleanField(default=False)
+    bidding = models.BooleanField(default=False)
+    status = models.CharField(max_length=50, choices=STATUS_CHOICES, default='pending')
+
+    def __str__(self):
+        return "{}:{}".format(self.id, self.email)
+
+    def total_cost(self):
+        return sum([li.cost() for li in self.lineitem_set.all()])
 
     
 class Product(models.Model):
@@ -59,42 +89,6 @@ class Product(models.Model):
         return self.name
     
     
-# Create your models here.
-class Order(models.Model):
-    STATUS_CHOICES = [
-        ('pending', 'Pending'),
-        ('completed', 'Completed'),
-        ('In Progress', 'In Progress'),
-        ('cancelled', 'Cancelled'),
-        ('cancelled', 'Cancelled'),
-        ('approved', 'Approved'),
-        ('revision', 'Revision'),
-        ('completed', 'Completed'),
-         ('editing', 'Editing'),
-         ('in_progress', 'In Progress'),
-        # other statuses
-    ]
-    writer = models.CharField(max_length=255,default='Untitled')
-    title = models.CharField(max_length=255, default='Untitled')
-    type_of_paper = models.CharField(max_length=255, default='Unknown')
-    words = models.IntegerField(default=0)
-    amount_due = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
-    name = models.CharField(max_length=191)
-    email = models.EmailField()
-    postal_code = models.IntegerField()
-    address = models.CharField(max_length=191)
-    date = models.DateTimeField(auto_now_add=True)
-    paid = models.BooleanField(default=False)
-    bidding = models.BooleanField(default=False)
-    # status = models.CharField(max_length=50, default='new')
-    status = models.CharField(max_length=50, choices=STATUS_CHOICES, default='pending')
-
-
-    def __str__(self):
-        return "{}:{}".format(self.id, self.email)
-
-    def total_cost(self):
-        return sum([ li.cost() for li in self.lineitem_set.all() ] )
 
 class Message(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)  # Ensure user with ID 1 exists

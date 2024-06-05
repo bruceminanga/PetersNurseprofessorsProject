@@ -1,6 +1,6 @@
 # Import necessary modules from Django and the application
 from django.shortcuts import render, redirect 
-from app1.forms import NewCustomerForm, CouponApplyForm
+from app1.forms import NewOrderForm, CouponApplyForm
 from django.contrib.auth.decorators import login_required
 from paypal.standard.forms import PayPalPaymentsForm
 from django.conf import settings
@@ -199,6 +199,11 @@ def dashboard(request):
         'wallet_balance': wallet_balance,
         'registration_date': registration_date,
     }
+    # Only add the success message on certain conditions, e.g., after form submission
+    if 'order_submitted' in request.session:
+        messages.success(request, 'Order request submitted successfully.')
+        del request.session['order_submitted']
+
     return render(request, "dashboard/dashboard.html", context)
 
 # This function handles the order form page of the website
@@ -207,7 +212,7 @@ def dashboard(request):
 def orderform(request):
     coupon_apply_form = CouponApplyForm()
     if request.method == 'POST':
-        form = NewCustomerForm(request.POST, request.FILES)
+        form = NewOrderForm(request.POST, request.FILES)
         if form.is_valid():
             order = form.save(commit=False)
             order.user = request.user  # Ensure the order is associated with the current user
@@ -242,7 +247,7 @@ def orderform(request):
             messages.error(request, 'Invalid form submission.')
             print(form.errors.as_data())
     else:
-        form = NewCustomerForm()
+        form = NewOrderForm()
 
     context = {
         'form': form,

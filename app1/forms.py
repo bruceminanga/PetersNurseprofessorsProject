@@ -1,6 +1,6 @@
 # import the standard Django Forms
 from django import forms
-from app1.models import Customer
+from app1.models import Order
 
 class NewsletterForm(forms.Form):
     email = forms.EmailField(widget=forms.EmailInput(attrs={
@@ -11,14 +11,14 @@ class NewsletterForm(forms.Form):
     }))
 
 class CouponApplyForm(forms.Form):
-    coupon_code = forms.CharField()
+    coupon_code = forms.CharField(required=False)
 
 class MultipleFileInput(forms.ClearableFileInput):
     allow_multiple_selected = True
 
     
 
-class NewCustomerForm(forms.ModelForm):
+class NewOrderForm(forms.ModelForm):
     ACADEMIC_LEVEL_CHOICES = [
     ("High School", "High School"),
     ("Undergraduate", "Undergraduate"),
@@ -153,5 +153,5 @@ class NewCustomerForm(forms.ModelForm):
     # additional_services = forms.IntegerField()
     
     class Meta:
-        model = Customer
+        model = Order
         fields = ['academic_level', 'type_of_service', 'type_of_paper', 'subject_area', 'title','paper_instructions','additional_material', 'paper_format', 'number_of_pages', 'currency', 'sources','powerpoint_slides', 'deadline', 'writer_category', 'preferred_writers_id']
