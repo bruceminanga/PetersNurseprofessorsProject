@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<br><br><br>
+<div class="container mt-5">
+    <h2>Messages</h2>
+    <div class="card mb-4">
+        <div class="card-header">
+            Your Messages
+        </div>
+        <div class="card-body">
+            <h5>Unread Messages: {{ unread_messages_count }}</h5>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Sender</th>
+                        <th>Subject</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for message in messages %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ message.sender }}</td>
+                        <td>{{ message.subject }}</td>
+                        <td>{{ message.date_sent }}</td>
+                        <td>{{ message.get_status_display }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

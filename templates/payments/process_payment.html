@@ -1,0 +1,16 @@
+
+
+{% extends 'base.html' %} {% load static %} {% load crispy_forms_tags %}
+{% block content %}
+
+<br />
+<br />
+<br />
+<br />
+
+<div class="container p-5 my-5 border">
+    <h1>Pay with PayPal</h1>
+    <p>{{ form.render }}</p>
+  </div>
+<br />
+{% endblock %}

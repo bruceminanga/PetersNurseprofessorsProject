@@ -1,0 +1,282 @@
+{% extends 'base.html' %} 
+{% load static %} 
+{% block content %}
+
+<link
+  rel="stylesheet"
+  type="text/css"
+  href="{% static 'css/dashboard.css' %}"
+/>
+
+<body><br><br><br><br>
+  {% include 'messages.html' %}
+
+  <div class="container">
+    <div class="row">
+      <!-- First section on the left -->
+      <div class="col-md-4">
+        <!-- side bar section -->
+        <section>
+          <div class="container mt-3">
+            <div class="sidebar">
+              <div class="sidebar-section">
+                <button class="btn btn-danger mb-2" onclick="location.href='{% url 'app1:order' %}'">Place Order</button>
+                <button class="btn btn-dark">Dashboard</button>
+              </div>
+              <div class="sidebar-section">
+                <button class="btn btn-outline-secondary" onclick="location.href='{% url 'app1:completed_orders' %}'">
+                  <i class="bi bi-list-task"></i> Unpaid Orders
+                  <span>({{ unpaid_orders_count }})</span>
+                </button>
+                <button class="btn btn-outline-secondary" onclick="location.href='{% url 'app1:bidding_orders' %}'">
+                  <i class="bi bi-gavel"></i> Bidding Orders <span>({{ bidding_orders_count }})</span>
+                </button>
+                <button class="btn btn-outline-secondary" onclick="location.href='{% url 'app1:in_progress_orders' %}'">
+                  <i class="bi bi-hourglass-split"></i> In Progress
+                  <span>({{ in_progress_orders_count }})</span>
+                </button>
+                <button class="btn btn-outline-secondary" onclick="location.href='{% url 'app1:editing_orders' %}'">
+                  <i class="bi bi-pencil-square"></i> Editing Orders
+                  <span>({{ editing_orders_count }})</span>
+                </button>
+                <button class="btn btn-outline-secondary" onclick="location.href='{% url 'app1:completed_orders' %}'">
+                  <i class="bi bi-check-circle"></i> Completed
+                  <span>({{ completed_orders_count }})</span>
+                </button>
+                <button class="btn btn-outline-secondary" onclick="location.href='{% url 'app1:revision_orders' %}'">
+                  <i class="bi bi-arrow-repeat"></i> Revision Orders
+                  <span>({{ revision_orders_count }})</span>
+                </button>
+                <button class="btn btn-outline-secondary" onclick="location.href='{% url 'app1:approved_orders' %}'">
+                  <i class="bi bi-check2-all"></i> Approved Orders
+                  <span>({{ approved_orders_count }})</span>
+                </button>
+                <button class="btn btn-outline-secondary" onclick="location.href='{% url 'app1:cancelled_orders' %}'">
+                  <i class="bi bi-x-circle"></i> Cancelled Orders
+                  <span>({{ cancelled_orders_count }})</span>
+                </button>
+              </div>
+              <div class="sidebar-section">
+                <button class="btn btn-secondary" onclick="location.href='{% url 'app1:messages' %}'">
+                  <i class="bi bi-envelope"></i> Messages <span>({{ unread_messages_count }})</span>
+                </button>
+                <button class="btn btn-secondary" onclick="location.href='{% url 'app1:my_discounts' %}'">
+                  <i class="bi bi-percent"></i> My Discounts
+                  <span>({{ active_discounts_count }})</span>
+                </button>
+                <button class="btn btn-secondary" onclick="location.href='{% url 'app1:referral_earnings' %}'">
+                  <i class="bi bi-currency-dollar"></i> Earn from Referrals
+                  <span>(${{ total_referral_earnings }})</span>
+                </button>
+                <button class="btn btn-secondary" onclick="location.href='{% url 'app1:wallet_management' %}'">
+                  <i class="bi bi-wallet"></i> Wallet Management
+                  <span>(${{ wallet_balance }})</span>
+                </button>
+                <button class="btn btn-secondary">
+                  <i class="bi bi-person"></i> My Profile
+                </button>
+                <button class="btn btn-secondary" onclick="location.href='/accounts/logout'">
+                  <i class="bi bi-box-arrow-right"></i> Logout
+                </button>
+              </div>
+              <div class="sidebar-section tip-writer">
+                <h5>Tip Writer</h5>
+                <form>
+                  <div class="mb-3">
+                    <label for="writerId" class="form-label">Writer/Editor ID</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="writerId"
+                      placeholder="Enter ID"
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label for="amount" class="form-label">Amount</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="amount"
+                      placeholder="Amount"
+                    />
+                  </div>
+                  <button type="submit" class="btn btn-warning">
+                    Tip Writer
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- Other sections on the right -->
+      <div class="col-md-8">
+        <!-- latest section -->
+
+        <section>
+          <div class="container mt-4">
+            <!-- Order Notice -->
+            <div class="card mb-4">
+              <div class="card-header text-center">
+                Need expert writer? There are more than 300 writers waiting for you
+                <button class="btn btn-success ms-3">Place Order</button>
+              </div>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="row mb-4 text-center">
+              <div class="col-md-3">
+                <div class="card">
+                  <div class="card-body">
+                    <h5 class="card-title">
+                      <i class="bi bi-people-fill"></i> Bidding orders {{ bidding_orders_count }}
+                    </h5>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="card">
+                  <div class="card-body">
+                    <h5 class="card-title">
+                      <i class="bi bi-gear-fill"></i> In Progress {{ in_progress_orders_count }}
+                    </h5>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="card">
+                  <div class="card-body">
+                    <h5 class="card-title">
+                      <i class="bi bi-check-circle-fill"></i> Completed {{ completed_orders_count }}
+                    </h5>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="card">
+                  <div class="card-body">
+                    <h5 class="card-title">
+                      <i class="bi bi-wallet2"></i> Wallet Balance ${{ wallet_balance }}
+                    </h5>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Profile Section -->
+            <div class="row mb-4">
+              <div class="col-md-2 text-center">
+                <div class="profile-img">
+                  <i class="bi bi-person-circle"></i>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <h4>{{user.username}}</h4>
+                <p>Registered: {{ registration_date|date:"d-m-Y" }}</p>
+              </div>
+              <div class="col-md-4 text-end">
+                <h6>Recent Messages</h6>
+                <p><i class="bi bi-envelope"></i> No Messages</p>
+              </div>
+            </div>
+
+            <!-- Pending Payments -->
+            <h5>Pending Payments</h5>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Title</th>
+                  <th>Type of Paper</th>
+                  <th>Words</th>
+                  <th>Writer</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for payment in pending_payments %}
+                <tr>
+                  <td><a href="" class="nav-link">#{{ payment.id }}</a></td>
+                  <td>{{ payment.title }}</td>
+                  <td>{{ payment.type_of_paper }}</td>
+                  <td>{{ payment.words }} words</td>
+                  <td>
+                    <button class="btn btn-pay">Pay Now (${{ payment.amount_due }})</button>
+                  </td>
+                </tr>
+                {% empty %}
+                <tr>
+                  <td colspan="5">No pending payments.</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section>
+          <h2>Latest Activities</h2>
+          <div class="tabs">
+            <button class="tab active" onclick="showTab('completed')">COMPLETED ORDERS</button>
+            <button class="tab" onclick="showTab('inprogress')">IN PROGRESS</button>
+          </div>
+          <div id="completed" class="tab-content active">
+            <div class="table-container">
+              <table>
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Title</th>
+                    <th>Type of Paper</th>
+                    <th>Words</th>
+                    <th>Writer</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for order in completed_orders %}
+                  <tr>
+                    <td><a href="#" class="nav-link">#{{ order.id }}</a></td>
+                    <td>{{ order.title }}</td>
+                    <td>{{ order.type_of_paper }}</td>
+                    <td>{{ order.words }}</td>
+                    <td>{{ order.writer }}</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div id="inprogress" class="tab-content">
+            <div class="table-container">
+              <table>
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Title</th>
+                    <th>Type of Paper</th>
+                    <th>Words</th>
+                    <th>Writer</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for order in in_progress_orders %}
+                  <tr>
+                    <td><a href="#" class="nav-link">#{{ order.id }}</a></td>
+                    <td>{{ order.title }}</td>
+                    <td>{{ order.type_of_paper }}</td>
+                    <td>{{ order.words }}</td>
+                    <td>{{ order.writer }}</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <script src="{% static 'js/dashboard.js' %}"></script> <!-- linking javascriipt -->
+</body>
+{% endblock %}

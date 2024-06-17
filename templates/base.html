@@ -1,0 +1,166 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/bs-brain@2.0.3/tutorials/timelines/timeline-2/assets/css/timeline-2.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/bs-brain@2.0.3/components/ctas/cta-1/assets/css/cta-1.css"
+    />
+
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{% static 'css/style.css' %}"
+    />
+    <link rel="stylesheet" href="assets/vendor/libs/rateyo/rateyo.css" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css"
+    />
+    <link href="{% static 'css/base.css' %}" rel="stylesheet" />
+  </head>
+
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg bg-dark navbar-dark py-3 fixed-top">
+      <div class="container">
+        <!-- <a href="/"><img src="{% static 'images/logo.png' %}" alt="logo" style="width:50px; height:auto;">
+        </a> -->
+        <a href="/" class="text-decoration-none">NurseProfessors</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navmenu"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navmenu">
+          <ul class="navbar-nav ms-auto">
+            {% if user.is_authenticated %}
+            <li class="nav-item">
+              <div class="dropdown">
+                <button
+                  class="btn btn-secondary btn-sm dropdown-toggle"
+                  type="button"
+                  id="dropdownMenuButton1"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  <a class="nav-link">Welcome {{ user.username }}</a>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                  <li>
+                    <a class="dropdown-item" href="/accounts/logout">Logout</a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="/accounts/password/reset/"
+                      >Change Password</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li class="nav-item">
+              <a href="/dashboard" class="nav-link">Dashboard</a>
+            </li>
+            {% else %}
+            <li class="nav-item">
+              <a href="/accounts/login" class="nav-link">Login</a>
+            </li>
+            <li class="nav-item">
+              <a href="/#about-us" class="nav-link">About Us</a>
+            </li>
+            <li class="nav-item">
+              <a href="/#pricing" class="nav-link">Pricing</a>
+            </li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    {% block content %} {% endblock %} {% block footer %}
+    <!-- Footer -->
+    <footer class="p-5 bg-dark text-white text-center position-relative">
+      <!-- Newsletter -->
+      <section
+        class="row d-flex justify-content-center align-items-center rows"
+      >
+        <div class="col-md-6">
+          <div class="text-center">
+            <img src="{% static 'images/Newsletter.png' %}" width="200" />
+            <span class="d-block mt-3">
+              Subscribe to our newsletter in order not to miss new arrivals,
+              <br />
+              promotions, job vacancies and discounts of our store.
+            </span>
+            <div class="mx-auto" style="max-width: 300px">
+              <div class="input-group mb-3 mt-4">
+                <form action="{% url 'app1:home' %}" method="post">
+                  {% csrf_token %}
+                  <div class="input-group">
+                    {{ form3.email }}
+                    <div class="input-group-append">
+                      <button
+                        class="btn btn-success border-rad"
+                        type="submit"
+                        id="button-addon2"
+                      >
+                        Subscribe
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="text-muted mt-5 mb-5 text-center small">
+        Powered by :
+        <a
+          class="text-muted"
+          target="_blank"
+          href="https://bruceminanga.github.io/Personal-Website/"
+          >Bruce Minanga
+        </a>
+        <br />Copyright @2024. All rights reserved.
+      </div>
+    </footer>
+    {% endblock footer %}
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.1.1/mapbox-gl.js"></script>
+
+    <script src="assets/vendor/libs/rateyo/rateyo.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
