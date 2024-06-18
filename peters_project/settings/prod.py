@@ -37,4 +37,4 @@ DATABASES = {
   }
 }
 
-print(f"DATABASES configuration: {DATABASES}")
+# print(f"DATABASES configuration: {DATABASES}") #used to check whether am using postgresql database in production
