@@ -36,3 +36,5 @@ DATABASES = {
       'PORT': '5432',
   }
 }
+
+print(f"DATABASES configuration: {DATABASES}")
