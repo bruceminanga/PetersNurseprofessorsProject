@@ -1,5 +1,6 @@
 from django.urls import path, include
 from app1 import views
+from rest_framework.authtoken.views import obtain_auth_token
 from .views import (
     CouponView,
     wallet_management_view,
@@ -15,9 +16,29 @@ from .views import (
     bidding_orders,
     run_migrations,
 )
-
+from .views_api import (
+    DiscountListCreateAPIView,
+    DiscountDetailAPIView,
+    CouponListCreateAPIView,
+    CouponDetailAPIView,
+    OrderListCreateAPIView,
+    OrderDetailAPIView,
+    ProductListCreateAPIView,
+    ProductDetailAPIView,
+    MessageListCreateAPIView,
+    MessageDetailAPIView,
+    ReferralListCreateAPIView,
+    ReferralDetailAPIView,
+    WalletListCreateAPIView,
+    WalletDetailAPIView,
+    TransactionListCreateAPIView,
+    TransactionDetailAPIView,
+    LineItemListCreateAPIView,
+    LineItemDetailAPIView,
+)
 
 app_name = "app1"
+
 urlpatterns = [
     path("", views.home, name="home"),
     path("dashboard/", views.dashboard, name="dashboard"),
@@ -37,4 +58,25 @@ urlpatterns = [
     path("in-progress-orders/", in_progress_orders, name="in_progress_orders"),
     path("bidding-orders/", bidding_orders, name="bidding_orders"),
     path("run-migrations/", run_migrations, name="run-migrations"),
+    
+    # API Endpoints
+    path('api/discounts/', DiscountListCreateAPIView.as_view(), name='discount-list-create'),
+    path('api/discounts/<int:pk>/', DiscountDetailAPIView.as_view(), name='discount-detail'),
+    path('api/coupons/', CouponListCreateAPIView.as_view(), name='coupon-list-create'),
+    path('api/coupons/<int:pk>/', CouponDetailAPIView.as_view(), name='coupon-detail'),
+    path('api/orders/', OrderListCreateAPIView.as_view(), name='order-list-create'),
+    path('api/orders/<int:pk>/', OrderDetailAPIView.as_view(), name='order-detail'),
+    path('api/products/', ProductListCreateAPIView.as_view(), name='product-list-create'),
+    path('api/products/<int:pk>/', ProductDetailAPIView.as_view(), name='product-detail'),
+    path('api/messages/', MessageListCreateAPIView.as_view(), name='message-list-create'),
+    path('api/messages/<int:pk>/', MessageDetailAPIView.as_view(), name='message-detail'),
+    path('api/referrals/', ReferralListCreateAPIView.as_view(), name='referral-list-create'),
+    path('api/referrals/<int:pk>/', ReferralDetailAPIView.as_view(), name='referral-detail'),
+    path('api/wallets/', WalletListCreateAPIView.as_view(), name='wallet-list-create'),
+    path('api/wallets/<int:pk>/', WalletDetailAPIView.as_view(), name='wallet-detail'),
+    path('api/transactions/', TransactionListCreateAPIView.as_view(), name='transaction-list-create'),
+    path('api/transactions/<int:pk>/', TransactionDetailAPIView.as_view(), name='transaction-detail'),
+    path('api/lineitems/', LineItemListCreateAPIView.as_view(), name='lineitem-list-create'),
+    path('api/lineitems/<int:pk>/', LineItemDetailAPIView.as_view(), name='lineitem-detail'),
+    path('api-token-auth/', obtain_auth_token), 
 ]
