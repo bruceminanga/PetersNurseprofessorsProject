@@ -4,33 +4,47 @@ name: Deploy to cpanel via ftp
 
 # Controls when the workflow will run
 on:
-    # Triggers the workflow on push or pull request events but only for the "main" branch
-    push:
-        branches: [ "master" ]
-    pull_request:
-        branches: [ "master" ]
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  push:
+    branches: ["master"]
+  pull_request:
+    branches: ["master"]
 
 jobs:
-    deploy:
-        runs-on: ubuntu-latest
-        steps:
-            - name: Check out code
-              uses: actions/checkout@v4
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
 
-            # - name: Collect static files
-            #   run: |
-            #     python manage.py collectstatic --noinput
+      - name: Set up Python
+  uses: actions/setup-python@v2
+  with:
+    python-version: '3.9'
 
-            - name: Deploy to cpanel via ftp
-              uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-              with:
-                  server: nurseprofessors.com
-                  username: ${{ secrets.ftp_USERNAME }}
-                  password: ${{ secrets.ftp_PASSWORD }}
-                  server-dir: ./PetersNurseprofessorsProject/ #path to the directory containing the code to be uploaded.
-                  exclude: ".git/ .github/" #You can specify files/directory to exclude.
+- name: Install dependencies
+  run: |
+    python -m venv venv
+    source venv/bin/activate
+    pip install -r requirements.txt
 
-            - name: Trigger migration script
-              run: |
-                  echo "Triggering migration script..."
-                  curl -v -X GET "https://nurseprofessors.com/run-migrations/?secret=${{ secrets.MIGRATION_SECRET }}"
+- name: Collect static files
+  run: |
+    source venv/bin/activate
+    cd /home/nursmozs/PetersNurseprofessorsProject
+    python manage.py collectstatic --noinput
+
+
+      - name: Deploy to cpanel via ftp
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: nurseprofessors.com
+          username: ${{ secrets.ftp_USERNAME }}
+          password: ${{ secrets.ftp_PASSWORD }}
+          server-dir: ./PetersNurseprofessorsProject/ #path to the directory containing the code to be uploaded.
+          exclude: ".git/ .github/" #You can specify files/directory to exclude.
+
+      - name: Trigger migration script
+        run: |
+          echo "Triggering migration script..."
+          curl -v -X GET "https://nurseprofessors.com/run-migrations/?secret=${{ secrets.MIGRATION_SECRET }}"
