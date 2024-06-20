@@ -144,8 +144,11 @@ class NewOrderForm(forms.ModelForm):
     paper_instructions = forms.CharField(
         widget=forms.Textarea, max_length=200, required=False
     )
+    # additional_material = forms.FileField(
+    #     widget=MultipleFileInput(attrs={"multiple": True}),  # Use the custom widget
+    # )
     additional_material = forms.FileField(
-        widget=MultipleFileInput(attrs={"multiple": True}),  # Use the custom widget
+        widget=forms.ClearableFileInput(attrs={"multiple": True}), required=False
     )
     paper_format = forms.ChoiceField(choices=PAPER_FORMAT)
     number_of_pages = forms.ChoiceField(choices=NUMBER_OF_PAGES_CHOICES)

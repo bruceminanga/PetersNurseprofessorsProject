@@ -13,6 +13,8 @@ DEBUG = os.getenv('DEBUG')
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
+print(f"Base directory set to {BASE_DIR}") #debugging
+
 
 
 # Quick-start development settings - unsuitable for production
