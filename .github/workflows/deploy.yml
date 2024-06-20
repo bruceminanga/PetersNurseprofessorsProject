@@ -17,9 +17,9 @@ jobs:
             - name: Check out code
               uses: actions/checkout@v4
 
-            - name: Collect static files
-              run: |
-                python manage.py collectstatic --noinput
+            # - name: Collect static files
+            #   run: |
+            #     python manage.py collectstatic --noinput
 
             - name: Deploy to cpanel via ftp
               uses: SamKirkland/FTP-Deploy-Action@v4.3.5
