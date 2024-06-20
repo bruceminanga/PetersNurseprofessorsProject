@@ -31,7 +31,7 @@ jobs:
       - name: Collect static files
         run: |
           source venv/bin/activate
-          cd /home/nursmozs/PetersNurseprofessorsProject
+          cd $GITHUB_WORKSPACE/PetersNurseprofessorsProject
           python manage.py collectstatic --noinput
 
       - name: Deploy to cpanel via ftp
