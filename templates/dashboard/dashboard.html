@@ -24,7 +24,7 @@
                 <button class="btn btn-dark">Dashboard</button>
               </div>
               <div class="sidebar-section">
-                <button class="btn btn-outline-secondary" onclick="location.href='{% url 'app1:completed_orders' %}'">
+                <button class="btn btn-outline-secondary" onclick="location.href='{% url 'app1:unpaid_orders' %}'">
                   <i class="bi bi-list-task"></i> Unpaid Orders
                   <span>({{ unpaid_orders_count }})</span>
                 </button>
@@ -39,9 +39,9 @@
                   <i class="bi bi-pencil-square"></i> Editing Orders
                   <span>({{ editing_orders_count }})</span>
                 </button>
-                <button class="btn btn-outline-secondary" onclick="location.href='{% url 'app1:completed_orders' %}'">
+                <button class="btn btn-outline-secondary" onclick="location.href='{% url 'app1:unpaid_orders' %}'">
                   <i class="bi bi-check-circle"></i> Completed
-                  <span>({{ completed_orders_count }})</span>
+                  <span>({{ unpaid_orders_count }})</span>
                 </button>
                 <button class="btn btn-outline-secondary" onclick="location.href='{% url 'app1:revision_orders' %}'">
                   <i class="bi bi-arrow-repeat"></i> Revision Orders
@@ -148,7 +148,7 @@
                 <div class="card">
                   <div class="card-body">
                     <h5 class="card-title">
-                      <i class="bi bi-check-circle-fill"></i> Completed {{ completed_orders_count }}
+                      <i class="bi bi-check-circle-fill"></i> Completed {{ unpaid_orders_count }}
                     </h5>
                   </div>
                 </div>
@@ -233,7 +233,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  {% for order in completed_orders %}
+                  {% for order in unpaid_orders %}
                   <tr>
                     <td><a href="#" class="nav-link">#{{ order.id }}</a></td>
                     <td>{{ order.title }}</td>

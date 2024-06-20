@@ -56,12 +56,12 @@ def editing_orders(request):
 
 
 @login_required
-def completed_orders(request):
-    completed_orders = Order.objects.filter(status="completed")
+def unpaid_orders(request):
+    unpaid_orders = Order.objects.filter(status="completed")
     return render(
         request,
-        "dashboard/completed_orders.html",
-        {"completed_orders": completed_orders},
+        "dashboard/unpaid_orders.html",
+        {"unpaid_orders": unpaid_orders},
     )
 
 
@@ -209,13 +209,13 @@ def home(request):
 def dashboard(request):
     user = request.user
     registration_date = user.date_joined
-    completed_orders = Order.objects.filter(status="completed")
+    unpaid_orders = Order.objects.filter(status="completed")
     in_progress_orders = Order.objects.filter(status="in_progress")
     unpaid_orders_count = Order.objects.filter(paid=False).count()
     bidding_orders_count = Order.objects.filter(bidding=True).count()
     in_progress_orders_count = Order.objects.filter(status="in_progress").count()
     editing_orders_count = Order.objects.filter(status="editing").count()
-    completed_orders_count = Order.objects.filter(status="completed").count()
+    unpaid_orders_count = Order.objects.filter(status="completed").count()
     revision_orders_count = Order.objects.filter(status="revision").count()
     approved_orders_count = Order.objects.filter(status="approved").count()
     cancelled_orders_count = Order.objects.filter(status="cancelled").count()
@@ -233,14 +233,14 @@ def dashboard(request):
             wallet_balance = 0.00
     pending_payments = Order.objects.filter(status="pending")
     context = {
-        "completed_orders": completed_orders,
+        "unpaid_orders": unpaid_orders,
         "in_progress_orders": in_progress_orders,
         "pending_payments": pending_payments,
         "unpaid_orders_count": unpaid_orders_count,
         "bidding_orders_count": bidding_orders_count,
         "in_progress_orders_count": in_progress_orders_count,
         "editing_orders_count": editing_orders_count,
-        "completed_orders_count": completed_orders_count,
+        "unpaid_orders_count": unpaid_orders_count,
         "revision_orders_count": revision_orders_count,
         "approved_orders_count": approved_orders_count,
         "cancelled_orders_count": cancelled_orders_count,
