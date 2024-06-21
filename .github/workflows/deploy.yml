@@ -42,6 +42,11 @@ jobs:
           echo "Listing all files before deployment:"
           find . -type f | sort
 
+      - name: Debug FTP Deploy Action
+        run: |
+          echo "Listing all files that will be deployed:"
+          find . -type f | grep -v -E '\.git/|\.github/|venv/|__pycache__/|\.pyc|\.pyo|\.DS_Store|node_modules/|\.ftp-deploy-sync-state\.json|\.env|\.venv|\.log|logs/|\.tmp|\.bak|\.md|tests/|docs/|\.idea/|\.vscode/|\.pytest_cache/|\.test\.js|\.spec\.js|\.config\.js|\.eslintignore|\.eslintrc\.js|\.babelrc|\.editorconfig|\.gitignore'
+
       - name: Deploy to cPanel via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
