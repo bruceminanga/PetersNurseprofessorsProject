@@ -42,8 +42,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'crispy_bootstrap5',
     'django_extensions',  
-    'rest_framework', 
-    'rest_framework.authtoken',
+    
     # all auth configurations   
     'allauth',
     'allauth.account',
@@ -51,14 +50,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google'
 ]
 
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.TokenAuthentication',
-    ),
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
-    ),
-}
+
 
 SOCIALACCOUNT_LOGIN_ON_GET=True
     
