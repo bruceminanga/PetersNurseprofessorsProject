@@ -90,7 +90,7 @@ jobs:
             .babelrc
             .editorconfig
             .gitignore
-          verbose: true
+          log-level: verbose
 
       - name: Trigger migration script
         run: |
