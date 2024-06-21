@@ -20,7 +20,7 @@ STORAGES = {
 }
 
 
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['nurseprofessors.com', 'www.nurseprofessors.com']
 
