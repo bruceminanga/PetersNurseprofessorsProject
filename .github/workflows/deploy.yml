@@ -90,8 +90,7 @@ jobs:
             .babelrc
             .editorconfig
             .gitignore
-        env:
-          ACTIONS_RUNNER_DEBUG: true
+          verbose: true
 
       - name: Trigger migration script
         run: |
