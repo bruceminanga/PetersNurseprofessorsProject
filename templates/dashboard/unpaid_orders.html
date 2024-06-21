@@ -1,5 +1,5 @@
-{% extends 'base.html' %} 
-{% load static %} 
+{% extends 'base.html' %}
+{% load static %}
 {% block content %}
 
 <br><br><br><br><br>
@@ -19,36 +19,50 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td><a href="#">#1</a></td>
-                    <td>Untitled</td>
-                    <td>Unknown</td>
-                    <td>0</td>
-                    <td>$41.79</td>
-                    <td>2024-06-18</td>
-                    <td>6hrs</td>
+                {% for order in unpaid_orders %}
+                <tr id="order-{{ order.id }}">
+                    <td><a href="#">{{ order.id }}</a></td>
+                    <td>{{ order.title }}</td>
+                    <td>{{ order.type_of_paper }}</td>
+                    <td>{{ order.words }}</td>
+                    <td>${{ order.price }}</td>
+                    <td>{{ order.date|date:"Y-m-d" }}</td>
+                    <td>{{ order.deadline }}</td>
                     <td>
                         <button class="btn btn-success">Pay Now</button>
-                        <button class="btn btn-danger">Cancel Order</button>
+                        <button class="btn btn-danger" onclick="cancelOrder({{ order.id }})">Cancel Order</button>
                     </td>
                 </tr>
-                <tr>
-                    <td><a href="#">#2</a></td>
-                    <td>Untitled</td>
-                    <td>Unknown</td>
-                    <td>0</td>
-                    <td>$41.79</td>
-                    <td>2024-06-18</td>
-                    <td>6hrs</td>
-                    <td>
-                        <button class="btn btn-success">Pay Now</button>
-                        <button class="btn btn-danger">Cancel Order</button>
-                    </td>
-                </tr>
-                <!-- More orders can be listed here -->
+                {% endfor %}
             </tbody>
         </table>
     </div>
     <br><br><br>
 
-    {% endblock %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+function cancelOrder(orderId) {
+    if (confirm("Are you sure you want to cancel this order?")) {
+        $.ajax({
+            url: '{% url "app1:cancel_order" 0 %}'.replace('/0/', '/' + orderId + '/'),
+            type: 'POST',
+            data: {
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            success: function(response) {
+                if (response.success) {
+                    $('#order-' + orderId).remove();
+                    alert(response.message);
+                } else {
+                    alert(response.message);
+                }
+            },
+            error: function() {
+                alert('An error occurred. Please try again.');
+            }
+        });
+    }
+}
+</script>
+
+{% endblock %}

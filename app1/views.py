@@ -36,13 +36,31 @@ def editing_orders(request):
 
 @login_required
 def unpaid_orders(request):
-    unpaid_orders = Order.objects.filter(status="completed")
+    unpaid_orders = Order.objects.filter(status="unpaid")
     return render(request, "dashboard/unpaid_orders.html", {"unpaid_orders": unpaid_orders})
+
 
 @login_required
 def revision_orders(request):
     revision_orders = Order.objects.filter(status="revision")
     return render(request, "dashboard/revision_orders.html", {"revision_orders": revision_orders})
+
+from django.http import JsonResponse
+
+@login_required
+@require_POST
+def cancel_order(request, order_id):
+    try:
+        order = get_object_or_404(Order, id=order_id, writer=request.user)
+        if order.status == 'unpaid':
+            order.status = 'cancelled'
+            order.save()
+            return JsonResponse({"success": True, "message": "Order cancelled successfully."})
+        else:
+            return JsonResponse({"success": False, "message": "Order cannot be cancelled."})
+    except Order.DoesNotExist:
+        return JsonResponse({"success": False, "message": "Order does not exist."})
+
 
 @login_required
 def approved_orders(request):
