@@ -41,7 +41,7 @@ jobs:
       - name: Deploy to cPanel via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          server: https://nurseprofessors.com/
+          server: nurseprofessors.com
           username: ${{ secrets.ftp_USERNAME }}
           password: ${{ secrets.ftp_PASSWORD }}
           server-dir: ./PetersNurseprofessorsProject/
