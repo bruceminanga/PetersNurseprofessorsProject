@@ -58,6 +58,7 @@ class Order(models.Model):
         ("approved", "Approved"),
         ("revision", "Revision"),
         ("editing", "Editing"),
+        ("unpaid", "unpaid"),
     ]
 
     writer = models.CharField(max_length=255, default="Untitled")
