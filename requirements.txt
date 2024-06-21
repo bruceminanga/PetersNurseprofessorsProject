@@ -24,6 +24,7 @@ json5
 outcome
 pathspec
 psycopg2-binary
+PyJWT
 PySocks
 python-dotenv
 pytz
