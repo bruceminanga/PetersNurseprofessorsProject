@@ -51,27 +51,27 @@ jobs:
           password: ${{ secrets.ftp_PASSWORD }}
           server-dir: ./PetersNurseprofessorsProject/
           exclude: |
-            .git/
-            .github/
-            venv/
-            __pycache__/
+            .git/*
+            .github/*
+            venv/*
+            __pycache__/*
             *.pyc
             *.pyo
             .DS_Store
-            node_modules/
+            node_modules/*
             .ftp-deploy-sync-state.json
             .env
             .venv
             *.log
-            logs/
+            logs/*
             *.tmp
             *.bak
             *.md
-            tests/
-            docs/
-            .idea/
-            .vscode/
-            .pytest_cache/
+            tests/*
+            docs/*
+            .idea/*
+            .vscode/*
+            .pytest_cache/*
             *.test.js
             *.spec.js
             *.config.js
