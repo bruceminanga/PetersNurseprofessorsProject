@@ -141,42 +141,23 @@ class NewOrderForm(forms.ModelForm):
     type_of_paper = forms.ChoiceField(choices=TYPE_OF_PAPER_CHOICES)
     subject_area = forms.ChoiceField(choices=SUBJECT_AREA_CHOICES)
     title = forms.CharField()
-    paper_instructions = forms.CharField(
-        widget=forms.Textarea, max_length=200, required=False
-    )
-    additional_material = forms.FileField(
-        widget=MultipleFileInput(attrs={"multiple": True}),  # Use the custom widget
-    )
-   
+    paper_instructions = forms.CharField(widget=forms.Textarea, max_length=200, required=False)
+    additional_material = forms.FileField(widget=MultipleFileInput(attrs={"multiple": True}))
     paper_format = forms.ChoiceField(choices=PAPER_FORMAT)
     number_of_pages = forms.ChoiceField(choices=NUMBER_OF_PAGES_CHOICES)
-    number_of_pages_increment = forms.IntegerField(
-        min_value=1, max_value=100, initial=1
-    )
+    number_of_pages_increment = forms.IntegerField(min_value=1, max_value=100, initial=1)
     currency = forms.ChoiceField(choices=CURRENCY_CHOICES)
     sources = forms.IntegerField(min_value=1, max_value=10, initial=1)
     powerpoint_slides = forms.IntegerField(min_value=0, max_value=50, initial=0)
     deadline = forms.ChoiceField(choices=DEADLINE_CHOICES)
     writer_category = forms.ChoiceField(choices=WRITER_CATEGORY_CHOICES)
     preferred_writers_id = forms.IntegerField(required=False)
-    # additional_services = forms.IntegerField()
 
     class Meta:
         model = Order
         fields = [
-            "academic_level",
-            "type_of_service",
-            "type_of_paper",
-            "subject_area",
-            "title",
-            "paper_instructions",
-            "additional_material",
-            "paper_format",
-            "number_of_pages",
-            "currency",
-            "sources",
-            "powerpoint_slides",
-            "deadline",
-            "writer_category",
-            "preferred_writers_id",
+            "academic_level", "type_of_service", "type_of_paper", "subject_area", 
+            "title", "paper_instructions", "additional_material", "paper_format", 
+            "number_of_pages", "currency", "sources", "powerpoint_slides", 
+            "deadline", "writer_category", "preferred_writers_id"
         ]

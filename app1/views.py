@@ -264,22 +264,16 @@ def dashboard(request):
 def orderform(request):
     coupon_apply_form = CouponApplyForm()
     if request.method == "POST":
-        form = NewOrderForm(request.POST, request.FILES)
+        form = NewOrderForm(request.POST or None, request.FILES or None)
         if form.is_valid():
             order = form.save(commit=False)
-            order.user = (
-                request.user
-            )  # Ensure the order is associated with the current user
-            # Assign the calculated price to the order's price field (define the price calculation logic as needed)
-            order.price = calculate_order_price(
-                form.cleaned_data
-            )  # Example function to calculate price
+            order.user = request.user
+            order.price = calculate_order_price(form.cleaned_data)
             order.save()
 
-            # Save the uploaded files
-            uploaded_files = request.FILES.getlist("additional_material")
-            for file in uploaded_files:
-                order.additional_material.save(file.name, file, save=True)
+            # Save the uploaded files to AdditionalMaterial model
+            for f in request.FILES.getlist('additional_material'):
+                AdditionalMaterial.objects.create(order=order, file=f)
 
             messages.success(request, "Order request submitted successfully.")
 
@@ -299,7 +293,7 @@ def orderform(request):
                 except Coupon.DoesNotExist:
                     request.session["coupon_id"] = None
 
-            return redirect("app1:dashboard")  # Replace with your success page
+            return redirect("app1:dashboard")
 
         else:
             messages.error(request, "Invalid form submission.")

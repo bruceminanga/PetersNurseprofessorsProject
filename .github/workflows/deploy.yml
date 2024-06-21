@@ -1,4 +1,4 @@
-name: Deploy to cpanel via ftp
+name: Deploy to cPanel via FTP
 
 on:
   push:
@@ -38,15 +38,17 @@ jobs:
           cd $GITHUB_WORKSPACE
           python manage.py collectstatic --noinput
 
-      - name: Deploy to cpanel via ftp
+      - name: Deploy to cPanel via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          server: nurseprofessors.com
+          server: ftp://nurseprofessors.com
           username: ${{ secrets.ftp_USERNAME }}
           password: ${{ secrets.ftp_PASSWORD }}
           server-dir: ./PetersNurseprofessorsProject/
           method: 'git-ftp-push'
           exclude: ".git/ .github/"
+          retries: 3
+          retry-interval: 10s
 
       - name: Trigger migration script
         run: |

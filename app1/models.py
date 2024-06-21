@@ -30,8 +30,8 @@ class Coupon(models.Model):
 
 from django.db import models
 
+# models.py
 from django.db import models
-
 
 class Order(models.Model):
     academic_level = models.CharField(max_length=20, default="1")
@@ -40,9 +40,6 @@ class Order(models.Model):
     subject_area = models.CharField(max_length=20, default="1")
     title = models.CharField(max_length=255, default="Untitled")
     paper_instructions = models.TextField(default="")
-    additional_material = models.FileField(
-        upload_to="files/%Y/%m/%d/", null=True, blank=True
-    )
     paper_format = models.CharField(max_length=20, default="Unknown")
     number_of_pages = models.CharField(max_length=20, default="1")
     number_of_pages_increment = models.IntegerField(default=1)
@@ -81,6 +78,11 @@ class Order(models.Model):
 
     def total_cost(self):
         return sum([li.cost() for li in self.lineitem_set.all()])
+
+class AdditionalMaterial(models.Model):
+    order = models.ForeignKey(Order, related_name='additional_materials', on_delete=models.CASCADE)
+    file = models.FileField(upload_to='files/%Y/%m/%d/')
+
 
 
 class Product(models.Model):
