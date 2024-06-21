@@ -22,20 +22,19 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}-${{ matrix.python-version }}
           restore-keys: |
             ${{ runner.os }}-pip-
 
       - name: Install dependencies
         run: |
-          python -m venv venv
-          source venv/bin/activate
+          python -m venv ./venv
+          source ./venv/bin/activate
           pip install -r requirements.txt
 
       - name: Collect static files
         run: |
-          source venv/bin/activate
-          cd $GITHUB_WORKSPACE
+          source ./venv/bin/activate
           python manage.py collectstatic --noinput
 
       - name: List files for debugging
