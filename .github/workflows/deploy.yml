@@ -39,37 +39,28 @@ jobs:
           python manage.py collectstatic --noinput
 
       - name: Deploy to cPanel via FTP
-        id: deploy
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: nurseprofessors.com
           username: ${{ secrets.ftp_USERNAME }}
           password: ${{ secrets.ftp_PASSWORD }}
           server-dir: ./PetersNurseprofessorsProject/
-          exclude: ".git/ .github/"
-          log-level: verbose
-
-      - name: Retry FTP deployment on failure
-        if: failure()
-        run: |
-          retry() {
-            local n=1
-            local max=5
-            local delay=10
-            while true; do
-              "$@" && break || {
-                if [[ $n -lt $max ]]; then
-                  ((n++))
-                  echo "Attempt $n/$max:"
-                  sleep $delay;
-                else
-                  echo "The command has failed after $n attempts."
-                  return 1
-                fi
-              }
-            done
-          }
-          retry npx ftp-deploy --server nurseprofessors.com --username ${{ secrets.ftp_USERNAME }} --password ${{ secrets.ftp_PASSWORD }} --local-dir ./ --server-dir ./PetersNurseprofessorsProject/ --exclude ".git/ .github/"
+          exclude: |
+            .git/
+            .github/
+            venv/
+            __pycache__/
+            *.pyc
+            *.pyo
+            .DS_Store
+            node_modules/
+            .ftp-deploy-sync-state.json
+            .env
+            .venv
+            *.log
+            logs/
+            *.tmp
+            *.bak
 
       - name: Trigger migration script
         run: |
