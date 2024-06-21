@@ -38,6 +38,11 @@ jobs:
           cd $GITHUB_WORKSPACE
           python manage.py collectstatic --noinput
 
+      - name: List files for debugging
+        run: |
+          echo "Listing all files before deployment:"
+          find . -type f | sort
+
       - name: Deploy to cPanel via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
@@ -61,6 +66,20 @@ jobs:
             logs/
             *.tmp
             *.bak
+            *.md
+            tests/
+            docs/
+            .idea/
+            .vscode/
+            .pytest_cache/
+            *.test.js
+            *.spec.js
+            *.config.js
+            .eslintignore
+            .eslintrc.js
+            .babelrc
+            .editorconfig
+            .gitignore
 
       - name: Trigger migration script
         run: |
