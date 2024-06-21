@@ -7,7 +7,6 @@ from .views import (
     referral_earnings_view,
     messages_view,
     cancelled_orders,
-    approved_orders,
     revision_orders,
     unpaid_orders,
     editing_orders,
@@ -15,6 +14,7 @@ from .views import (
     bidding_orders,
     run_migrations,
     cancel_order,
+    order_detail,
 
 )
 
@@ -33,14 +33,11 @@ urlpatterns = [
     path("referral-earnings/", referral_earnings_view, name="referral_earnings"),
     path("messages/", messages_view, name="messages"),
     path("cancelled-orders/", cancelled_orders, name="cancelled_orders"),
-    path("approved-orders/", approved_orders, name="approved_orders"),
     path("revision-orders/", revision_orders, name="revision_orders"),
     path("unpaid-orders/", unpaid_orders, name="unpaid_orders"),
     path("editing-orders/", editing_orders, name="editing_orders"),
     path("in-progress-orders/", in_progress_orders, name="in_progress_orders"),
     path("bidding-orders/", bidding_orders, name="bidding_orders"),
     path("run-migrations/", run_migrations, name="run-migrations"),
-    path('cancel_order/<int:order_id>/', cancel_order, name='cancel_order'),
-    
-   
+    path('cancel_order/<int:order_id>/', cancel_order, name='cancel_order'),  
 ]

@@ -62,10 +62,15 @@ def cancel_order(request, order_id):
         return JsonResponse({"success": False, "message": "Order does not exist."})
 
 
+
+def debug_view(request, order_id):
+    return HttpResponse(f"Order ID: {order_id}")
+
 @login_required
-def approved_orders(request):
-    approved_orders = Order.objects.filter(status="approved")
-    return render(request, "dashboard/approved_orders.html", {"approved_orders": approved_orders})
+def order_detail(request, order_id):
+    order = get_object_or_404(Order, id=order_id, writer=request.user)
+    return render(request, 'dashboard/order_detail.html', {'order': order})
+
 
 @login_required
 def cancelled_orders(request):
