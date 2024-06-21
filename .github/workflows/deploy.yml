@@ -38,17 +38,29 @@ jobs:
           cd $GITHUB_WORKSPACE
           python manage.py collectstatic --noinput
 
-      - name: Deploy to cPanel via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server: nurseprofessors.com
-          username: ${{ secrets.ftp_USERNAME }}
-          password: ${{ secrets.ftp_PASSWORD }}
-          server-dir: ./PetersNurseprofessorsProject/
-          method: 'git-ftp-push'
-          exclude: ".git/ .github/"
-          retries: 3
-          retry-interval: 10s
+      - name: Install ftp-deploy
+        run: npm install -g ftp-deploy
+
+      - name: Deploy to cPanel via FTP with retries
+        run: |
+          retry() {
+            local n=1
+            local max=5
+            local delay=10
+            while true; do
+              "$@" && break || {
+                if [[ $n -lt $max ]]; then
+                  ((n++))
+                  echo "Attempt $n/$max:"
+                  sleep $delay;
+                else
+                  echo "The command has failed after $n attempts."
+                  return 1
+                fi
+              }
+            done
+          }
+          retry npx ftp-deploy --server nurseprofessors.com --username ${{ secrets.ftp_USERNAME }} --password ${{ secrets.ftp_PASSWORD }} --local-dir ./ --server-dir ./PetersNurseprofessorsProject/ --exclude ".git/ .github/"
 
       - name: Trigger migration script
         run: |
