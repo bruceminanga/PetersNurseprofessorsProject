@@ -24,7 +24,7 @@ class OrderSerializer(serializers.ModelSerializer):
         model = Order
         fields = [
             'id', 'academic_level', 'type_of_service', 'type_of_paper', 'subject_area',
-            'title', 'paper_instructions', 'additional_material', 'paper_format',
+            'title', 'paper_instructions', 'paper_format',
             'number_of_pages', 'number_of_pages_increment', 'currency', 'sources',
             'powerpoint_slides', 'deadline', 'writer_category', 'preferred_writers_id',
             'price', 'writer', 'words', 'amount_due', 'name', 'email', 'postal_code',

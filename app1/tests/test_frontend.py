@@ -54,7 +54,6 @@ class FrontendTests(LiveServerTestCase):
             'id_subject_area',
             'id_title',
             'id_paper_instructions',
-            'id_additional_material',
             'id_paper_format',
             'id_number_of_pages_increment',
             'id_number_of_pages',

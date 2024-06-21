@@ -50,7 +50,6 @@ class Order(models.Model):
     writer_category = models.CharField(max_length=20, default="Standard")
     preferred_writers_id = models.IntegerField(null=True, blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-
     STATUS_CHOICES = [
         ("pending", "Pending"),
         ("completed", "Completed"),
@@ -78,11 +77,6 @@ class Order(models.Model):
 
     def total_cost(self):
         return sum([li.cost() for li in self.lineitem_set.all()])
-
-class AdditionalMaterial(models.Model):
-    order = models.ForeignKey(Order, related_name='additional_materials', on_delete=models.CASCADE)
-    file = models.FileField(upload_to='files/%Y/%m/%d/')
-
 
 
 class Product(models.Model):

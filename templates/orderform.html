@@ -15,7 +15,7 @@
 </style>
 
 <br /><br /><br /><br />
-<form method="post" id="myform" enctype="multipart/form-data">
+<form id="myform" method="post" enctype="multipart/form-data" action="{% url 'app1:order' %}">
   <div class="container py-5">
     <div class="row">
       <!-- personal details div -->
@@ -30,7 +30,6 @@
             {{ form.subject_area|as_crispy_field }}
             {{ form.title|as_crispy_field }}
             {{ form.paper_instructions|as_crispy_field }}
-            {{ form.additional_material|as_crispy_field }}
             {{ form.paper_format|as_crispy_field }}
             <br />
             <div class="text-start">

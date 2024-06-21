@@ -264,16 +264,12 @@ def dashboard(request):
 def orderform(request):
     coupon_apply_form = CouponApplyForm()
     if request.method == "POST":
-        form = NewOrderForm(request.POST or None, request.FILES or None)
+        form = NewOrderForm(request.POST, request.FILES)
         if form.is_valid():
             order = form.save(commit=False)
             order.user = request.user
             order.price = calculate_order_price(form.cleaned_data)
             order.save()
-
-            # Save the uploaded files to AdditionalMaterial model
-            for f in request.FILES.getlist('additional_material'):
-                AdditionalMaterial.objects.create(order=order, file=f)
 
             messages.success(request, "Order request submitted successfully.")
 
@@ -298,11 +294,15 @@ def orderform(request):
         else:
             messages.error(request, "Invalid form submission.")
             print(form.errors.as_data())
+            print("POST data:", request.POST)
+            print("FILES data:", request.FILES)
     else:
         form = NewOrderForm()
 
     context = {"form": form, "coupon_apply_form": coupon_apply_form}
     return render(request, "orderform.html", context=context)
+
+
 
 
 def calculate_order_price(data):

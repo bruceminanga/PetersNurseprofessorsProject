@@ -142,7 +142,6 @@ class NewOrderForm(forms.ModelForm):
     subject_area = forms.ChoiceField(choices=SUBJECT_AREA_CHOICES)
     title = forms.CharField()
     paper_instructions = forms.CharField(widget=forms.Textarea, max_length=200, required=False)
-    additional_material = forms.FileField(widget=MultipleFileInput(attrs={"multiple": True}))
     paper_format = forms.ChoiceField(choices=PAPER_FORMAT)
     number_of_pages = forms.ChoiceField(choices=NUMBER_OF_PAGES_CHOICES)
     number_of_pages_increment = forms.IntegerField(min_value=1, max_value=100, initial=1)
@@ -157,7 +156,7 @@ class NewOrderForm(forms.ModelForm):
         model = Order
         fields = [
             "academic_level", "type_of_service", "type_of_paper", "subject_area", 
-            "title", "paper_instructions", "additional_material", "paper_format", 
+            "title", "paper_instructions", "paper_format", 
             "number_of_pages", "currency", "sources", "powerpoint_slides", 
             "deadline", "writer_category", "preferred_writers_id"
         ]
