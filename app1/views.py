@@ -62,14 +62,9 @@ def cancel_order(request, order_id):
     logger.info(f"Cancel order request received for order_id: {order_id}")
     try:
         order = Order.objects.get(id=order_id)
-        if isinstance(order.writer, str):
-            if order.writer != request.user.username:
-                logger.warning(f"User {request.user.username} attempted to cancel order {order_id} belonging to user {order.writer}")
-                return JsonResponse({"success": False, "message": "You do not have permission to cancel this order."})
-        else:
-            if order.writer != request.user:
-                logger.warning(f"User {request.user.id} attempted to cancel order {order_id} belonging to user {order.writer.id}")
-                return JsonResponse({"success": False, "message": "You do not have permission to cancel this order."})
+        if order.writer != request.user:
+            logger.warning(f"User {request.user.id} attempted to cancel order {order_id} belonging to user {order.writer.id}")
+            return JsonResponse({"success": False, "message": "You do not have permission to cancel this order."})
         
         if order.status == 'unpaid':
             order.status = 'cancelled'
@@ -85,7 +80,6 @@ def cancel_order(request, order_id):
     except Exception as e:
         logger.exception(f"Error cancelling order {order_id}: {str(e)}")
         return JsonResponse({"success": False, "message": "An error occurred while cancelling the order."})
-
 
 
 def debug_view(request, order_id):
