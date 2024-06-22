@@ -39,5 +39,5 @@ urlpatterns = [
     path("in-progress-orders/", in_progress_orders, name="in_progress_orders"),
     path("bidding-orders/", bidding_orders, name="bidding_orders"),
     path("run-migrations/", run_migrations, name="run-migrations"),
-    path('cancel_order/<int:order_id>/', cancel_order, name='cancel_order'),  
+    path('cancel-order/<int:order_id>/', views.cancel_order, name='cancel_order'),  
 ]

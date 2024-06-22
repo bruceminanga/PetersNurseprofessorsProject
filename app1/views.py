@@ -47,19 +47,44 @@ def revision_orders(request):
 
 from django.http import JsonResponse
 
+import logging
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404
+from .models import Order
+
+logger = logging.getLogger(__name__)
+
 @login_required
 @require_POST
 def cancel_order(request, order_id):
+    logger.info(f"Cancel order request received for order_id: {order_id}")
     try:
-        order = get_object_or_404(Order, id=order_id, writer=request.user)
+        order = Order.objects.get(id=order_id)
+        if isinstance(order.writer, str):
+            if order.writer != request.user.username:
+                logger.warning(f"User {request.user.username} attempted to cancel order {order_id} belonging to user {order.writer}")
+                return JsonResponse({"success": False, "message": "You do not have permission to cancel this order."})
+        else:
+            if order.writer != request.user:
+                logger.warning(f"User {request.user.id} attempted to cancel order {order_id} belonging to user {order.writer.id}")
+                return JsonResponse({"success": False, "message": "You do not have permission to cancel this order."})
+        
         if order.status == 'unpaid':
             order.status = 'cancelled'
             order.save()
+            logger.info(f"Order {order_id} cancelled successfully")
             return JsonResponse({"success": True, "message": "Order cancelled successfully."})
         else:
+            logger.warning(f"Attempt to cancel non-unpaid order: {order_id}")
             return JsonResponse({"success": False, "message": "Order cannot be cancelled."})
     except Order.DoesNotExist:
+        logger.error(f"Order does not exist: {order_id}")
         return JsonResponse({"success": False, "message": "Order does not exist."})
+    except Exception as e:
+        logger.exception(f"Error cancelling order {order_id}: {str(e)}")
+        return JsonResponse({"success": False, "message": "An error occurred while cancelling the order."})
 
 
 

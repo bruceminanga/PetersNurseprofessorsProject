@@ -2,6 +2,7 @@ from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.contrib.auth.models import User
 from django.utils import timezone
+from django.conf import settings
 
 
 class Discount(models.Model):
@@ -61,7 +62,7 @@ class Order(models.Model):
         ("unpaid", "unpaid"),
     ]
 
-    writer = models.CharField(max_length=255, default="Untitled")
+    writer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='orders')
     words = models.IntegerField(default=0)
     amount_due = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     name = models.CharField(max_length=191)
@@ -71,7 +72,7 @@ class Order(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     paid = models.BooleanField(default=False)
     bidding = models.BooleanField(default=False)
-    status = models.CharField(max_length=50, choices=STATUS_CHOICES, default="pending")
+    status = models.CharField(max_length=50, choices=STATUS_CHOICES, default="unpaid")
 
     def __str__(self):
         return "{}:{}".format(self.id, self.email)
