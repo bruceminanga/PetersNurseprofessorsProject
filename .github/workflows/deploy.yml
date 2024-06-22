@@ -6,100 +6,102 @@ on:
   pull_request:
     branches: ["master"]
 
+env:
+  PYTHON_VERSION: '3.9'
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    
     steps:
-      - name: Check out code
-        uses: actions/checkout@v4
-      
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.9'
+    - name: Check out code
+      uses: actions/checkout@v4
 
-      - name: Cache pip dependencies
-        uses: actions/cache@v2
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}-${{ matrix.python-version }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
+    - name: Set up Python ${{ env.PYTHON_VERSION }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
 
-      - name: Install dependencies
-        run: |
-          python -m venv ./venv
-          source ./venv/bin/activate
-          pip install -r requirements.txt
-          # Check for missing dependencies
-          pip check
+    - name: Cache pip dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
 
-      - name: Collect static files
-        run: |
-          source ./venv/bin/activate
-          python manage.py collectstatic --noinput
+    - name: Install dependencies
+      run: |
+        python -m venv ./venv
+        source ./venv/bin/activate
+        pip install --upgrade pip
+        pip install -r requirements.txt
+        pip check
 
-      - name: List files for debugging
-        run: |
-          echo "Listing all files before deployment:"
-          find . -type f | sort
+    - name: Run tests
+      run: |
+        source ./venv/bin/activate
+        python manage.py test
 
-      - name: Debug FTP Deploy Action
-        run: |
-          echo "Listing all files that will be deployed:"
-          find . -type f | grep -v -E '\.git/|\.github/|venv/|__pycache__/|\.pyc|\.pyo|\.DS_Store|node_modules/|\.ftp-deploy-sync-state\.json|\.env|\.venv|\.log|logs/|\.tmp|\.bak|\.md|tests/|docs/|\.idea/|\.vscode/|\.pytest_cache/|\.test\.js|\.spec\.js|\.config\.js|\.eslintignore|\.eslintrc\.js|\.babelrc|\.editorconfig|\.gitignore'
+    - name: Collect static files
+      run: |
+        source ./venv/bin/activate
+        python manage.py collectstatic --noinput
 
-      - name: Deploy to cPanel via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server: nurseprofessors.com
-          username: ${{ secrets.ftp_USERNAME }}
-          password: ${{ secrets.ftp_PASSWORD }}
-          server-dir: ./PetersNurseprofessorsProject/
-          exclude: |
-            .git/
-            .git/**
-            .github/
-            .github/**
-            venv/
-            venv/**
-            __pycache__/
-            __pycache__/**
-            *.pyc
-            *.pyo
-            .DS_Store
-            node_modules/
-            node_modules/**
-            .ftp-deploy-sync-state.json
-            .env
-            .venv
-            *.log
-            logs/
-            logs/**
-            *.tmp
-            *.bak
-            *.md
-            tests/
-            tests/**
-            docs/
-            docs/**
-            .idea/
-            .idea/**
-            .vscode/
-            .vscode/**
-            .pytest_cache/
-            .pytest_cache/**
-            *.test.js
-            *.spec.js
-            *.config.js
-            .eslintignore
-            .eslintrc.js
-            .babelrc
-            .editorconfig
-            .gitignore
-          log-level: verbose
+    - name: List files for deployment
+      run: |
+        echo "Files to be deployed:"
+        find . -type f | grep -v -E '\.git/|\.github/|venv/|__pycache__/|\.pyc|\.pyo|\.DS_Store|node_modules/|\.ftp-deploy-sync-state\.json|\.env|\.venv|\.log|logs/|\.tmp|\.bak|\.md|tests/|docs/|\.idea/|\.vscode/|\.pytest_cache/|\.test\.js|\.spec\.js|\.config\.js|\.eslintignore|\.eslintrc\.js|\.babelrc|\.editorconfig|\.gitignore'
 
-      - name: Trigger migration script
-        run: |
-          echo "Triggering migration script..."
-          curl -v -X GET "https://nurseprofessors.com/run-migrations/?secret=${{ secrets.MIGRATION_SECRET }}"
+    - name: Deploy to cPanel via FTP
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      with:
+        server: ${{ secrets.FTP_SERVER }}
+        username: ${{ secrets.FTP_USERNAME }}
+        password: ${{ secrets.FTP_PASSWORD }}
+        server-dir: ./PetersNurseprofessorsProject/
+        exclude: |
+          **/.git*
+          **/.git*/**
+          **/venv/**
+          **/__pycache__/**
+          **/*.pyc
+          **/*.pyo
+          **/.DS_Store
+          **/node_modules/**
+          .ftp-deploy-sync-state.json
+          **/.env*
+          **/*.log
+          **/logs/**
+          **/*.tmp
+          **/*.bak
+          **/*.md
+          **/tests/**
+          **/docs/**
+          **/.idea/**
+          **/.vscode/**
+          **/.pytest_cache/**
+          **/*.test.js
+          **/*.spec.js
+          **/*.config.js
+          **/.eslintignore
+          **/.eslintrc.js
+          **/.babelrc
+          **/.editorconfig
+        log-level: verbose
+
+    - name: Trigger migration script
+      env:
+        MIGRATION_URL: ${{ secrets.MIGRATION_URL }}
+        MIGRATION_SECRET: ${{ secrets.MIGRATION_SECRET }}
+      run: |
+        echo "Triggering migration script..."
+        curl -v -X GET "${MIGRATION_URL}?secret=${MIGRATION_SECRET}"
+
+    - name: Notify deployment status
+      if: always()
+      uses: 8398a7/action-slack@v3
+      with:
+        status: ${{ job.status }}
+        text: Deployment to cPanel ${{ job.status == 'success' && 'succeeded' || 'failed' }}!
+        webhook_url: ${{ secrets.SLACK_WEBHOOK }}

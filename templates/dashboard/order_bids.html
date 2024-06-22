@@ -1,0 +1,55 @@
+<h4>Bids for Order #{{ order.id }}</h4>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Writer ID</th>
+            <th>Writer Rating</th>
+            <th>Bid Amount</th>
+            <th>Estimated Completion Time</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for bid in bids %}
+        <tr>
+            <td>{{ bid.writer.id }}</td>
+            <td>{{ bid.writer.rating }}</td>
+            <td>${{ bid.amount }}</td>
+            <td>{{ bid.estimated_completion_time }}</td>
+            <td>
+                <button class="btn btn-primary view-bid" data-bid-id="{{ bid.id }}">View Bid</button>
+                <button class="btn btn-success accept-bid" data-bid-id="{{ bid.id }}">Accept Bid</button>
+                <button class="btn btn-secondary reject-bid" data-bid-id="{{ bid.id }}">Reject Bid</button>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<script>
+    function viewBid(bidId) {
+    // Implement AJAX call to fetch bid details
+}
+
+function acceptBid(bidId) {
+    // Implement AJAX call to accept the bid
+}
+
+function rejectBid(bidId) {
+    // Implement AJAX call to reject the bid
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.view-bid').forEach(button => {
+        button.addEventListener('click', () => viewBid(button.dataset.bidId));
+    });
+
+    document.querySelectorAll('.accept-bid').forEach(button => {
+        button.addEventListener('click', () => acceptBid(button.dataset.bidId));
+    });
+
+    document.querySelectorAll('.reject-bid').forEach(button => {
+        button.addEventListener('click', () => rejectBid(button.dataset.bidId));
+    });
+});
+</script>

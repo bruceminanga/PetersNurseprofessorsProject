@@ -20,6 +20,33 @@ import os
 from decimal import Decimal
 
 @login_required
+@require_POST
+def view_bid(request, bid_id):
+    bid = get_object_or_404(Bid, id=bid_id, order__writer=request.user)
+    # Return bid details as JSON
+    return JsonResponse({"bid": bid.to_dict()})
+
+@login_required
+@require_POST
+def accept_bid(request, bid_id):
+    bid = get_object_or_404(Bid, id=bid_id, order__writer=request.user)
+    # Implement bid acceptance logic
+    return JsonResponse({"success": True, "message": "Bid accepted successfully"})
+
+@login_required
+@require_POST
+def reject_bid(request, bid_id):
+    bid = get_object_or_404(Bid, id=bid_id, order__writer=request.user)
+    # Implement bid rejection logic
+    return JsonResponse({"success": True, "message": "Bid rejected successfully"})
+
+@login_required
+def order_bids(request, order_id):
+    order = get_object_or_404(Order, id=order_id, writer=request.user)
+    bids = order.bids.all()
+    return render(request, "dashboard/order_bids.html", {"order": order, "bids": bids})
+
+@login_required
 def bidding_orders(request):
     bidding_orders = Order.objects.filter(bidding=True)
     return render(request, "dashboard/bidding_orders.html", {"bidding_orders": bidding_orders})
@@ -87,8 +114,12 @@ def debug_view(request, order_id):
 
 @login_required
 def order_detail(request, order_id):
-    order = get_object_or_404(Order, id=order_id, writer=request.user)
-    return render(request, 'dashboard/order_detail.html', {'order': order})
+    try:
+        order = Order.objects.get(id=order_id)
+        return render(request, 'dashboard/order_detail.html', {'order': order})
+    except Order.DoesNotExist:
+        messages.error(request, f"Order with ID {order_id} does not exist.")
+        return redirect('app1:bidding_orders')
 
 
 @login_required

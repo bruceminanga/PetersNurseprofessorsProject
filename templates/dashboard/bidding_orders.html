@@ -1,83 +1,34 @@
-{% extends 'base.html' %} 
-{% load static %} 
+{% extends 'base.html' %}
 {% block content %}
-
-<br><br><br><br><br>
-    <div class="container mt-4">
-        <h2 class="mb-4">Bidding Orders</h2>
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Order ID</th>
-                    <th>Title</th>
-                    <th>Type of Paper</th>
-                    <th>Words</th>
-                    <th>Deadline</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><a href="#">#1</a></td>
-                    <td>Untitled</td>
-                    <td>Unknown</td>
-                    <td>0</td>
-                    <td>6hrs</td>
-                    <td>3 Bids Received</td>
-                </tr>
-                <tr>
-                    <td><a href="#">#2</a></td>
-                    <td>Untitled</td>
-                    <td>Unknown</td>
-                    <td>0</td>
-                    <td>6hrs</td>
-                    <td>2 Bids Received</td>
-                </tr>
-                <!-- More bidding orders can be listed here -->
-            </tbody>
-        </table>
-
-        <!-- Bids details section -->
-        <div class="mt-4">
-            <h4>Bids for Order #1</h4>
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>Writer ID</th>
-                        <th>Writer Rating</th>
-                        <th>Bid Amount</th>
-                        <th>Estimated Completion Time</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Writer123</td>
-                        <td>4.8</td>
-                        <td>$40</td>
-                        <td>5hrs</td>
-                        <td>
-                            <button class="btn btn-primary">View Bid</button>
-                            <button class="btn btn-success">Accept Bid</button>
-                            <button class="btn btn-secondary">Reject Bid</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Writer456</td>
-                        <td>4.5</td>
-                        <td>$45</td>
-                        <td>4hrs</td>
-                        <td>
-                            <button class="btn btn-primary">View Bid</button>
-                            <button class="btn btn-success">Accept Bid</button>
-                            <button class="btn btn-secondary">Reject Bid</button>
-                        </td>
-                    </tr>
-                    <!-- More bids can be listed here -->
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <br><br><br>
-    {% endblock %}
-
+<div class="container mt-4">
+    <h2 class="mb-4">Bidding Orders</h2>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>Title</th>
+                <th>Type of Paper</th>
+                <th>Words</th>
+                <th>Deadline</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in bidding_orders %}
+            <tr>
+                <td><a href="{% url 'app1:order_detail' order.id %}">#{{ order.id }}</a></td>
+                <td>{{ order.title }}</td>
+                <td>{{ order.type_of_paper }}</td>
+                <td>{{ order.words }}</td>
+                <td>{{ order.deadline }}</td>
+                <td>Bidding</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6">No bidding orders available.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

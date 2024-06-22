@@ -15,6 +15,10 @@ from .views import (
     run_migrations,
     cancel_order,
     order_detail,
+    order_bids,
+    view_bid,
+    accept_bid,
+    reject_bid,
 
 )
 
@@ -40,4 +44,11 @@ urlpatterns = [
     path("bidding-orders/", bidding_orders, name="bidding_orders"),
     path("run-migrations/", run_migrations, name="run-migrations"),
     path("cancel-order/<int:order_id>/", views.cancel_order, name='cancel_order'),  
+    path("order_detail/<int:order_id>/", views.order_detail, name="order_detail"),
+
+
+    path("order-bids/<int:order_id>/", views.order_bids, name="order_bids"),
+    path("view-bid/<int:bid_id>/", views.view_bid, name="view_bid"),
+    path("accept-bid/<int:bid_id>/", views.accept_bid, name="accept_bid"),
+    path("reject-bid/<int:bid_id>/", views.reject_bid, name="reject_bid"),
 ]

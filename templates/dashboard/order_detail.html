@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Order #{{ order.id }} Details</h2>
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">{{ order.title }}</h5>
+            <p class="card-text"><strong>Type of Paper:</strong> {{ order.type_of_paper }}</p>
+            <p class="card-text"><strong>Subject Area:</strong> {{ order.subject_area }}</p>
+            <p class="card-text"><strong>Academic Level:</strong> {{ order.academic_level }}</p>
+            <p class="card-text"><strong>Number of Pages:</strong> {{ order.number_of_pages }}</p>
+            <p class="card-text"><strong>Words:</strong> {{ order.words }}</p>
+            <p class="card-text"><strong>Deadline:</strong> {{ order.deadline }}</p>
+            <p class="card-text"><strong>Price:</strong> ${{ order.price }}</p>
+            <p class="card-text"><strong>Status:</strong> {{ order.get_status_display }}</p>
+            <p class="card-text"><strong>Paper Instructions:</strong> {{ order.paper_instructions }}</p>
+        </div>
+    </div>
+
+    {% if order.bidding %}
+    <h3 class="mt-4">Bids</h3>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Writer</th>
+                <th>Bid Amount</th>
+                <th>Estimated Completion Time</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for bid in order.bids.all %}
+            <tr>
+                <td>{{ bid.writer.username }}</td>
+                <td>${{ bid.amount }}</td>
+                <td>{{ bid.estimated_completion_time }}</td>
+                <td>
+                    <button class="btn btn-sm btn-primary">View Bid</button>
+                    <button class="btn btn-sm btn-success">Accept Bid</button>
+                    <button class="btn btn-sm btn-danger">Reject Bid</button>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4">No bids received yet.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+
+    <div class="mt-4">
+        {% if order.status == 'unpaid' %}
+        <a href="#" class="btn btn-primary">Pay Now</a>
+        {% endif %}
+        <a href="{% url 'app1:bidding_orders' %}" class="btn btn-secondary">Back to Bidding Orders</a>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // You can add JavaScript here for handling bid actions
+    // For example:
+    // document.querySelectorAll('.btn-success').forEach(button => {
+    //     button.addEventListener('click', function() {
+    //         // Handle accepting bid
+    //     });
+    // });
+</script>
+{% endblock %}
