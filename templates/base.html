@@ -46,62 +46,58 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg bg-dark navbar-dark py-3 fixed-top">
       <div class="container">
-        <!-- <a href="/"><img src="{% static 'images/logo.png' %}" alt="logo" style="width:50px; height:auto;">
-        </a> -->
-        <a href="/" class="text-decoration-none">NurseProfessors</a>
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navmenu"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="navmenu">
-          <ul class="navbar-nav ms-auto">
-            {% if user.is_authenticated %}
-            <li class="nav-item">
-              <div class="dropdown">
-                <button
-                  class="btn btn-secondary btn-sm dropdown-toggle"
-                  type="button"
-                  id="dropdownMenuButton1"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  <a class="nav-link">Welcome {{ user.username }}</a>
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                  <li>
-                    <a class="dropdown-item" href="/accounts/logout">Logout</a>
-                  </li>
-                  <li>
-                    <a class="dropdown-item" href="/accounts/password/reset/"
-                      >Change Password</a
-                    >
-                  </li>
-                </ul>
-              </div>
-            </li>
-            <li class="nav-item">
-              <a href="/dashboard" class="nav-link">Dashboard</a>
-            </li>
-            {% else %}
-            <li class="nav-item">
-              <a href="/accounts/login" class="nav-link">Login</a>
-            </li>
-            <li class="nav-item">
-              <a href="/#about-us" class="nav-link">About Us</a>
-            </li>
-            <li class="nav-item">
-              <a href="/#pricing" class="nav-link">Pricing</a>
-            </li>
-            {% endif %}
-          </ul>
-        </div>
-      </div>
-    </nav>
+         <a href="/" class="text-decoration-none">NurseProfessors</a>
+         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navmenu">
+           <span class="navbar-toggler-icon"></span>
+         </button>
+         <div class="collapse navbar-collapse" id="navmenu">
+           <ul class="navbar-nav ms-auto">
+             {% if user.is_authenticated %}
+               <li class="nav-item">
+                 <div class="dropdown">
+                   <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                     <span class="nav-link">Welcome {{ user.username }}</span>
+                   </button>
+                   <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                     <li><a class="dropdown-item" href="/accounts/logout">Logout</a></li>
+                     <li><a class="dropdown-item" href="/accounts/password/reset/">Change Password</a></li>
+                     {% if user.writer_profile.is_writer %}
+                       <li><a class="dropdown-item" href="{% url 'app1:writer_dashboard' %}">Writer Dashboard</a></li>
+                     {% endif %}
+                   </ul>
+                 </div>
+               </li>
+               <li class="nav-item">
+                 <a href="/dashboard" class="nav-link">Dashboard</a>
+               </li>
+               {% if user.writer_profile.is_writer %}
+                 <li class="nav-item">
+                   <a href="{% url 'app1:writer_dashboard' %}" class="nav-link">
+                     Writer
+                   </a>
+                 </li>
+               {% else %}
+                 <li class="nav-item">
+                   <a href="{% url 'app1:become_writer' %}" class="nav-link">
+                     Become a Writer
+                   </a>
+                 </li>
+               {% endif %}
+             {% else %}
+               <li class="nav-item">
+                 <a href="/accounts/login" class="nav-link">Login</a>
+               </li>
+               <li class="nav-item">
+                 <a href="/#about-us" class="nav-link">About Us</a>
+               </li>
+               <li class="nav-item">
+                 <a href="/#pricing" class="nav-link">Pricing</a>
+               </li>
+             {% endif %}
+           </ul>
+         </div>
+       </div>
+     </nav>
 
     {% block content %} {% endblock %} {% block footer %}
     <!-- Footer -->
