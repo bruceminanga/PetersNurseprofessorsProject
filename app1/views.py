@@ -145,9 +145,14 @@ def become_writer(request):
 @login_required
 @writer_required
 def writer_dashboard(request):
-    writer = request.user.writer_profile
+    try:
+        writer = Writer.objects.get(user=request.user)
+    except Writer.DoesNotExist:
+        # Handle the case where the user doesn't have a writer profile
+        return redirect('app1:become_writer')
+    
     bids = Bid.objects.filter(writer=writer)
-    orders = Order.objects.filter(writer=writer)
+    orders = Order.objects.filter(writer=request.user)
     return render(request, 'dashboard/writer_dashboard.html', {'writer': writer, 'bids': bids, 'orders': orders})
 
 
