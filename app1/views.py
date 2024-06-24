@@ -113,6 +113,13 @@ def debug_view(request, order_id):
     return HttpResponse(f"Order ID: {order_id}")
 
 @login_required
+def writer_dashboard(request):
+    writer = request.user.writer
+    bids = Bid.objects.filter(writer=writer)
+    orders = Order.objects.filter(writer=writer)
+    return render(request, 'dashboard/writer_dashboard.html', {'writer': writer, 'bids': bids, 'orders': orders})
+
+@login_required
 def order_detail(request, order_id):
     try:
         order = Order.objects.get(id=order_id)
