@@ -1,6 +1,5 @@
 # import the standard Django Forms
 from django import forms
-from app1.models import Order
 
 
 class NewsletterForm(forms.Form):
@@ -153,6 +152,7 @@ class NewOrderForm(forms.ModelForm):
     preferred_writers_id = forms.IntegerField(required=False)
 
     class Meta:
+        from app1.models import Order
         model = Order
         fields = [
             "academic_level", "type_of_service", "type_of_paper", "subject_area", 
@@ -160,3 +160,9 @@ class NewOrderForm(forms.ModelForm):
             "number_of_pages", "currency", "sources", "powerpoint_slides", 
             "deadline", "writer_category", "preferred_writers_id"
         ]
+
+class WriterProfileForm(forms.ModelForm):
+    class Meta:
+        from app1.models import Writer
+        model = Writer
+        fields = ['bio', 'expertise']

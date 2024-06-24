@@ -52,5 +52,6 @@ urlpatterns = [
     path("accept-bid/<int:bid_id>/", views.accept_bid, name="accept_bid"),
     path("reject-bid/<int:bid_id>/", views.reject_bid, name="reject_bid"),
 
+    path('become-writer/', views.become_writer, name='become_writer'),
     path('writer/dashboard/', views.writer_dashboard, name='writer_dashboard'),
 ]

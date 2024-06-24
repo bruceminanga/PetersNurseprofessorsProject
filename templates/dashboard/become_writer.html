@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Become a Writer</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold mb-6 text-center">Become a Writer</h1>
+        <div class="max-w-md mx-auto bg-white rounded-lg shadow-md p-6">
+            <form method="post">
+                {% csrf_token %}
+                <div class="mb-4">
+                    <label for="{{ form.bio.id_for_label }}" class="block text-gray-700 font-bold mb-2">Bio:</label>
+                    {{ form.bio }}
+                </div>
+                <div class="mb-4">
+                    <label for="{{ form.expertise.id_for_label }}" class="block text-gray-700 font-bold mb-2">Expertise:</label>
+                    {{ form.expertise }}
+                </div>
+                <div class="flex items-center justify-between">
+                    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                        Submit Application
+                    </button>
+                    <a href="{% url 'app1:dashboard' %}" class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

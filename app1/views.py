@@ -79,7 +79,7 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
-from .models import Order
+from .models import Order, Writer
 
 logger = logging.getLogger(__name__)
 
@@ -112,12 +112,44 @@ def cancel_order(request, order_id):
 def debug_view(request, order_id):
     return HttpResponse(f"Order ID: {order_id}")
 
+# views.py
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+from .forms import WriterProfileForm
+
+# views.py
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+from .forms import WriterProfileForm
+from .models import Bid, Order, Writer
+from .decorators import writer_required
+
 @login_required
+def become_writer(request):
+    try:
+        writer_profile = request.user.writer_profile
+    except Writer.DoesNotExist:
+        writer_profile = Writer(user=request.user)
+
+    if request.method == 'POST':
+        form = WriterProfileForm(request.POST, instance=writer_profile)
+        if form.is_valid():
+            profile = form.save(commit=False)
+            profile.is_writer = True
+            profile.save()
+            return redirect('app1:writer_dashboard')
+    else:
+        form = WriterProfileForm(instance=writer_profile)
+    return render(request, 'dashboard/become_writer.html', {'form': form})
+
+@login_required
+@writer_required
 def writer_dashboard(request):
-    writer = request.user.writer
+    writer = request.user.writer_profile
     bids = Bid.objects.filter(writer=writer)
     orders = Order.objects.filter(writer=writer)
     return render(request, 'dashboard/writer_dashboard.html', {'writer': writer, 'bids': bids, 'orders': orders})
+
 
 @login_required
 def order_detail(request, order_id):
