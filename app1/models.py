@@ -173,7 +173,6 @@ from django.conf import settings
 
 class Writer(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='writer_profile')
-    is_writer = models.BooleanField(default=False)
     bio = models.TextField(blank=True)
     expertise = models.CharField(max_length=100, blank=True)
     rating = models.DecimalField(max_digits=3, decimal_places=2, default=0.00)
@@ -184,7 +183,7 @@ class Writer(models.Model):
     ], default='pending')
 
     def __str__(self):
-        return f"{self.user.username} ({'Writer' if self.is_writer else 'User'})"
+        return f"{self.user.username} ({self.get_application_status_display()})"
 
 class WriterApplication(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)

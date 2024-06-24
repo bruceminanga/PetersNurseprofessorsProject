@@ -25,8 +25,8 @@ class OrderAdmin(admin.ModelAdmin):
 
 @admin.register(Writer)
 class WriterAdmin(admin.ModelAdmin):
-    list_display = ['user', 'is_writer', 'application_status', 'rating']
-    list_filter = ['is_writer', 'application_status']
+    list_display = ['user', 'application_status', 'rating']
+    list_filter = ['application_status']
     search_fields = ['user__username', 'user__email']
 
 @admin.register(WriterApplication)

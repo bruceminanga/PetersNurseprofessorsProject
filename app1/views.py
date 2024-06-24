@@ -124,14 +124,27 @@ from .forms import WriterProfileForm
 from .models import Bid, Order, Writer
 from .decorators import writer_required
 
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .forms import WriterProfileForm
+from .models import Writer, WriterApplication
+
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .forms import WriterProfileForm
+from .models import Writer, WriterApplication
+
 @login_required
 def become_writer(request):
+    # Check if the user already has a pending or approved application
     try:
-        writer_profile = request.user.writer_profile
-        if writer_profile.is_writer:
-            messages.info(request, "You are already a writer.")
+        writer = Writer.objects.get(user=request.user)
+        if writer.application_status == 'approved':
+            messages.info(request, "You are already an approved writer.")
             return redirect('app1:writer_dashboard')
-        elif writer_profile.application_status == 'pending':
+        elif writer.application_status == 'pending':
             messages.info(request, "Your application is still pending. Please wait for admin approval.")
             return redirect('app1:dashboard')
     except Writer.DoesNotExist:
@@ -140,23 +153,13 @@ def become_writer(request):
     if request.method == 'POST':
         form = WriterProfileForm(request.POST)
         if form.is_valid():
-            application = WriterApplication(
+            Writer.objects.create(
                 user=request.user,
                 bio=form.cleaned_data['bio'],
-                expertise=form.cleaned_data['expertise']
+                expertise=form.cleaned_data['expertise'],
+                application_status='pending'
             )
-            application.save()
-            
-            Writer.objects.get_or_create(
-                user=request.user,
-                defaults={
-                    'bio': form.cleaned_data['bio'],
-                    'expertise': form.cleaned_data['expertise'],
-                    'application_status': 'pending'
-                }
-            )
-            
-            messages.success(request, "Your application has been submitted and is pending approval.")
+            messages.success(request, "Your application has been submitted and is pending admin approval.")
             return redirect('app1:dashboard')
     else:
         form = WriterProfileForm()
