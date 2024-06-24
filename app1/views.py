@@ -79,7 +79,7 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
-from .models import Order, Writer
+from .models import Order, Writer, WriterApplication
 
 logger = logging.getLogger(__name__)
 
@@ -128,32 +128,86 @@ from .decorators import writer_required
 def become_writer(request):
     try:
         writer_profile = request.user.writer_profile
+        if writer_profile.is_writer:
+            messages.info(request, "You are already a writer.")
+            return redirect('app1:writer_dashboard')
+        elif writer_profile.application_status == 'pending':
+            messages.info(request, "Your application is still pending. Please wait for admin approval.")
+            return redirect('app1:dashboard')
     except Writer.DoesNotExist:
-        writer_profile = Writer(user=request.user)
+        pass
 
     if request.method == 'POST':
-        form = WriterProfileForm(request.POST, instance=writer_profile)
+        form = WriterProfileForm(request.POST)
         if form.is_valid():
-            profile = form.save(commit=False)
-            profile.is_writer = True
-            profile.save()
-            return redirect('app1:writer_dashboard')
+            application = WriterApplication(
+                user=request.user,
+                bio=form.cleaned_data['bio'],
+                expertise=form.cleaned_data['expertise']
+            )
+            application.save()
+            
+            Writer.objects.get_or_create(
+                user=request.user,
+                defaults={
+                    'bio': form.cleaned_data['bio'],
+                    'expertise': form.cleaned_data['expertise'],
+                    'application_status': 'pending'
+                }
+            )
+            
+            messages.success(request, "Your application has been submitted and is pending approval.")
+            return redirect('app1:dashboard')
     else:
-        form = WriterProfileForm(instance=writer_profile)
+        form = WriterProfileForm()
+    
     return render(request, 'dashboard/become_writer.html', {'form': form})
 
 @login_required
-@writer_required
 def writer_dashboard(request):
     try:
         writer = Writer.objects.get(user=request.user)
+        if not writer.is_writer:
+            messages.warning(request, "Your application is still pending approval.")
+            return redirect('app1:dashboard')
     except Writer.DoesNotExist:
-        # Handle the case where the user doesn't have a writer profile
         return redirect('app1:become_writer')
     
-    bids = Bid.objects.filter(writer=writer)
-    orders = Order.objects.filter(writer=request.user)
-    return render(request, 'dashboard/writer_dashboard.html', {'writer': writer, 'bids': bids, 'orders': orders})
+    # Add your writer dashboard logic here
+    return render(request, 'dashboard/writer_dashboard.html', {'writer': writer})
+
+# Add this view for admin to approve/reject applications
+@login_required
+def manage_writer_applications(request):
+    if not request.user.is_staff:
+        messages.error(request, "You don't have permission to access this page.")
+        return redirect('app1:dashboard')
+    
+    applications = WriterApplication.objects.filter(status='pending')
+    
+    if request.method == 'POST':
+        application_id = request.POST.get('application_id')
+        action = request.POST.get('action')
+        
+        if application_id and action in ['approve', 'reject']:
+            application = WriterApplication.objects.get(id=application_id)
+            if action == 'approve':
+                application.status = 'approved'
+                writer = Writer.objects.get(user=application.user)
+                writer.is_writer = True
+                writer.application_status = 'approved'
+                writer.save()
+            else:
+                application.status = 'rejected'
+                writer = Writer.objects.get(user=application.user)
+                writer.application_status = 'rejected'
+                writer.save()
+            application.save()
+            messages.success(request, f"Application {action}d successfully.")
+        
+        return redirect('app1:manage_writer_applications')
+    
+    return render(request, 'dashboard/manage_writer_applications.html', {'applications': applications})
 
 
 @login_required
