@@ -145,8 +145,9 @@ def become_writer(request):
             messages.info(request, "You are already an approved writer.")
             return redirect('app1:writer_dashboard')
         elif writer.application_status == 'pending':
-            messages.info(request, "Your application is still pending. Please wait for admin approval.")
+            messages.info(request, "Your application is still pending. Please wait for admin approval when we will need a writer.")
             return redirect('app1:dashboard')
+
     except Writer.DoesNotExist:
         pass
 
